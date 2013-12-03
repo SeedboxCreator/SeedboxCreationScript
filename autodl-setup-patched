@@ -23,15 +23,15 @@
 #
 # ***** END LICENSE BLOCK *****
 
-AUTODL_IRSSI_ZIP_URL="http://sourceforge.net/projects/autodl-irssi/files/autodl-irssi-v1.31.zip/download"
-SVN_PATH_RUTORRENT_PLUGIN="https://svn.code.sf.net/p/autodl-irssi/code/trunk/rutorrent/autodl-irssi"
+AUTODL_IRSSI_ZIP_URL="https://autodl-irssi-community.googlecode.com/files/autodl-irssi-community.zip"
+GIT_PATH_RUTORRENT_PLUGIN="https://github.com/autodl-community/autodl-rutorrent.git"
 
 WEBMIN_URL="http://www.webmin.com/download/webmin-current.tar.gz"
 
 RUTORRENT_TRUNK_DIR="https://rutorrent.googlecode.com/svn/trunk"
 
 # The official tarballs are tried if subversion fails.
-RUTORRENT_VERSION="3.4"
+RUTORRENT_VERSION="3.6"
 RUTORRENT_CORE_NAME="rutorrent-$RUTORRENT_VERSION.tar.gz"
 RUTORRENT_CORE_URL="http://rutorrent.googlecode.com/files/$RUTORRENT_CORE_NAME"
 RUTORRENT_PLUGINS_NAME="plugins-$RUTORRENT_VERSION.tar.gz"
@@ -194,7 +194,7 @@ $CWARNING
 $*
 ***ERROR***
 $CEND
-Help forum: ${CGREEN}http://sourceforge.net/apps/phpbb/autodl-irssi/$CEND
+Help channel: ${CGREEN}#autodl-community@irc.p2p-network.net$CEND
 EOF
 	exit 1
 }
@@ -300,7 +300,7 @@ ruTorrent has been password protected. Also installs the startup script.
 
 Installs rtorrent, autodl-irssi and the startup script.
 
-Help forum: http://sourceforge.net/apps/phpbb/autodl-irssi/
+Help fchannel: #autodl-community@irc.p2p-network.net
 EOF
 	exit 1
 }
@@ -2462,6 +2462,9 @@ osHandler_debian() {
 			;;
 		installTools)
 			PACKAGES=
+			addProgram irssi
+			addProgram mediainfo
+			addProgram git-core
 			addProgram svn subversion
 			addProgram wget
 			addProgram unzip
@@ -2473,7 +2476,6 @@ osHandler_debian() {
 		installAutodlTools)
 			PACKAGES=
 			addProgram perl
-			addProgram irssi
 			addPerlModule Archive::Zip libarchive-zip-perl
 			addPerlModule HTML::Parser libhtml-parser-perl
 			addPerlModule Digest::SHA1 libdigest-sha1-perl
@@ -4668,9 +4670,9 @@ Press ENTER to use the default answer in [brackets].$CEND
 EOF
 
 	webServers=
-	canInstallApache	&& webServers="$webServers apache"
-	canInstallNginx		&& webServers="$webServers nginx"
 	canInstallLighttpd	&& webServers="$webServers lighttpd"
+	canInstallNginx		&& webServers="$webServers nginx"
+	canInstallApache	&& webServers="$webServers apache"
 	if [ -n "$webServers" ]; then
 		cat << EOF
 $CQUESTION
@@ -4678,9 +4680,9 @@ If you want to install ruTorrent you must install a web server, eg. Apache.
 If you've already installed another web server, you must first uninstall it or
 disable it. List of supported web servers:$CEND
 EOF
-		canInstallApache	&& echo "  ${CGREEN}apache$CEND   ${CQUESTION}Apache web server$CEND"
-		canInstallNginx		&& echo "  ${CGREEN}nginx$CEND    ${CQUESTION}nginx web server (lightweight)$CEND"
 		canInstallLighttpd	&& echo "  ${CGREEN}lighttpd$CEND ${CQUESTION}lighttpd web server (lightweight)$CEND"
+		canInstallNginx		&& echo "  ${CGREEN}nginx$CEND    ${CQUESTION}nginx web server (lightweight)$CEND"
+		canInstallApache	&& echo "  ${CGREEN}apache$CEND   ${CQUESTION}Apache web server$CEND"
 							   echo "  ${CGREEN}none$CEND     ${CQUESTION}Don't install a web server$CEND"
 		while true; do
 			INSTALL_WEB_SERVER=
@@ -5176,7 +5178,7 @@ if [ "$USE_RUTORRENT_PLUGIN" = y ]; then
 		fi
 	else
 		echo "${CMSG}Downloading the autodl-irssi ruTorrent plugin...$CEND"
-		if ! svn co $SVN_OPTS "$SVN_PATH_RUTORRENT_PLUGIN" autodl-irssi > /dev/null; then
+		if ! git clone "$GIT_PATH_RUTORRENT_PLUGIN" autodl-irssi > /dev/null; then
 			errorExit "Could not check out the autodl-irssi ruTorrent plugin"
 		fi
 	fi
