@@ -2651,6 +2651,7 @@ osHandler_fedora() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
 			installPackages
 			;;
 		installAutodlTools)
