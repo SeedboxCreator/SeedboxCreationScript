@@ -2929,6 +2929,8 @@ osHandler_arch() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo
 			installPackages
 			;;
 		installAutodlTools)
@@ -3111,6 +3113,8 @@ osHandler_freebsd() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo
 			installPackages
 			;;
 		installAutodlTools)
@@ -3173,6 +3177,8 @@ osHandler_openbsd() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen screen--
+			addProgram git
+			addProgram mediainfo			
 			installPackages
 			;;
 		installAutodlTools)
@@ -3231,6 +3237,8 @@ osHandler_netbsd() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo			
 			installPackages
 			;;
 		installAutodlTools)
@@ -3304,6 +3312,8 @@ osHandler_opensuse() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo			
 			installPackages
 			;;
 		installAutodlTools)
@@ -3451,6 +3461,8 @@ osHandler_mandriva() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo
 			installPackages
 			;;
 		installAutodlTools)
@@ -3556,6 +3568,8 @@ osHandler_pardus() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo
 			installPackages
 			;;
 		installAutodlTools)
@@ -3766,6 +3780,8 @@ osHandler_frugalware() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo
 			installPackages
 			;;
 		installAutodlTools)
@@ -3974,6 +3990,8 @@ osHandler_unity() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo
 			installPackages
 			;;
 		installAutodlTools)
@@ -4075,6 +4093,8 @@ osHandler_sabayon() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo
 			installPackages
 			;;
 		installAutodlTools)
@@ -4178,6 +4198,8 @@ osHandler_gentoo() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo
 			installPackages
 			;;
 		installAutodlTools)
@@ -4268,6 +4290,8 @@ osHandler_slaptget() {
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			addProgram git
+			addProgram mediainfo
 			installPackages
 			;;
 		installAutodlTools)
