@@ -5336,19 +5336,6 @@ guessed the IP address below. Make sure it's correct.$CEND
 EOF
 fi
 
-if [ -n "$RUTORRENT_BASE_PATH" ] && [ "$INSTALL_AUTODL_IRSSI" = y ]; then
-	RTORRENT_VERSION=$(sed -n -e "s/^[ 	]*version:[^\"']*['\"]\\([0-9]\.[0-9]\\)['\"].*/\\1/p" $RUTORRENT_BASE_PATH/js/webui.js)
-	major=$(echo $RTORRENT_VERSION | cut -d. -f1)
-	minor=$(echo $RTORRENT_VERSION | cut -d. -f2)
-	if [ $major -lt 3 ] || [ $minor -lt 2 ]; then
-		cat << EOF
-$CWARNING
-You're using an old version of ruTorrent. I detected version $RTORRENT_VERSION.
-You need at least version 3.2 for the autodl-irssi plugin to work correctly.$CEND
-EOF
-	fi
-fi
-
 if [ "$INSTALL_WEBMIN" = y ]; then
 	getIpAddress
 
