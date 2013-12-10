@@ -390,9 +390,7 @@ detectOs() {
 		os=fedora
 		os_long="$(cat /etc/redhat-release)"
 	else
-		$CMSG
-		Your OS is not detected as an OS supported by this script. This script only supports Debian and Fedora based OSes.$CEND
-		exit
+		echo $CMSG "     ${CRED}Your OS is not detected as an OS supported by this script. This script only supports Debian and Fedora based OSes.$CEND"
 	fi
 
 	os_long="${os_long:-$(uname -s)}"
