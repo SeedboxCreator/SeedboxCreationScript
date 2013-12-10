@@ -395,6 +395,7 @@ detectOs() {
 			Your OS is not detected as an OS supported by this script. This script only supports Debian and Fedora based OSes.
 		$CEND
 		EOF
+		Exit 2
 	fi
 
 	os_long="${os_long:-$(uname -s)}"
