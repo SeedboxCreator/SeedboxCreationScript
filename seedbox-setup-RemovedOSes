@@ -390,12 +390,9 @@ detectOs() {
 		os=fedora
 		os_long="$(cat /etc/redhat-release)"
 	else
-			cat << EOF
-		$CRED
-			Your OS is not detected as an OS supported by this script. This script only supports Debian and Fedora based OSes.
-		$CEND
-		EOF
-		Exit 2
+         echo -e "\e[1;31mYour OS is not detected as an OS supported by this script. This script only supports \e[5;32mDebian and Fedora\e[0m \e[1;31mbased OSes.\e[0m"
+         exit 1
+
 	fi
 
 	os_long="${os_long:-$(uname -s)}"
