@@ -362,7 +362,7 @@ detectOs() {
 	if [ -f /etc/fedora-release ]; then
 		os=fedora
 		os_long="$(cat /etc/fedora-release)"
-	# Must be before PCLinuxOS, Mandriva, and a whole bunch of other OS tests
+	# Must be before a whole bunch of other OS tests
 	elif [ "$DISTRIB_ID" = "Ubuntu" ]; then
 		os=debian
 		os_long="$DISTRIB_DESCRIPTION"
