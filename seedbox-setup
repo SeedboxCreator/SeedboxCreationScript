@@ -23,7 +23,7 @@
 #
 # ***** END LICENSE BLOCK *****
 
-AUTODL_IRSSI_ZIP_URL="https://bitbucket.org/autodl-community/autodl-irssi/downloads/autodl-irssi-community.zip"
+AUTODL_IRSSI_ZIP_URL="http://update.autodl-community.com/autodl-irssi-community.zip"
 GIT_PATH_RUTORRENT_PLUGIN="https://github.com/autodl-community/autodl-rutorrent.git"
 
 WEBMIN_URL="http://www.webmin.com/download/webmin-current.tar.gz"
