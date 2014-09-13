@@ -2426,7 +2426,7 @@ osHandler_debian() {
 			addProgram perl
 			addPerlModule Archive::Zip libarchive-zip-perl
 			addPerlModule HTML::Parser libhtml-parser-perl
-			addPerlModule Digest::SHA1 libdigest-sha1-perl
+			addPerlModule Digest::SHA1 libdigest-sha-perl
 			installPackages
 
 			installPerlModule Net::SSLeay libnet-ssleay-perl
@@ -2514,7 +2514,7 @@ EOF
 
 			WWW_PHP_INI=/etc/php5/apache2/php.ini
 			APACHE_DIR=/etc/apache2
-			APACHE_SITE_NAME=rutorrent
+			APACHE_SITE_NAME=rutorrent.conf
 			APACHE_SCGI_FILE=$APACHE_DIR/mods-available/scgi.load
 			initializeApacheVars www-data www-data "$APACHE_DIR/sites-available"
 			apacheCommonInitialization "apache2-prefork-dev" /usr/lib/apache2/modules
