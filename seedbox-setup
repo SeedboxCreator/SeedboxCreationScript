@@ -28,9 +28,10 @@ GIT_PATH_RUTORRENT_PLUGIN="https://github.com/autodl-community/autodl-rutorrent.
 
 WEBMIN_URL="http://www.webmin.com/download/webmin-current.tar.gz"
 
-RUTORRENT_TRUNK_DIR="https://rutorrent.googlecode.com/svn/trunk"
+# RUTORRENT_TRUNK_DIR="https://rutorrent.googlecode.com/svn/trunk"
+RUTORRENT_TRUNK_DIR="https://github.com/Novik/ruTorrent.git"
 
-# The official tarballs are tried if subversion fails.
+# The official tarballs are tried if git fails.
 RUTORRENT_VERSION="3.6"
 RUTORRENT_CORE_NAME="rutorrent-$RUTORRENT_VERSION.tar.gz"
 RUTORRENT_CORE_URL="http://dl.bintray.com/novik65/generic/$RUTORRENT_CORE_NAME"
@@ -47,8 +48,10 @@ RUTORRENT_PLUGINS=
 # remove the whole line or comment it (prepend a '#' to the start of the line).
 # If the line starts with '#', the plugin is not installed.
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS _getdir"
+RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS _noty2"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS _task"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS autotools"
+RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS check_port"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS chunks"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS cookies"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS cpuload"
@@ -58,20 +61,25 @@ RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS datadir"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS diskspace"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS edit"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS erasedata"
+RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS extratio"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS extsearch"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS feeds"
+RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS filedrop"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS geoip"
+RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS history"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS httprpc"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS ipad"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS loginmgr"
-RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS logoff"
+RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS lookat"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS mediainfo"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS ratio"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS retrackers"
 #RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS rpc"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS rss"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS rssurlrewrite"
+RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS rutracker_check"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS scheduler"
+RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS screenshots"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS seedingtime"
 #RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS show_peers_like_wtorrent"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS source"
@@ -83,7 +91,7 @@ RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS unpack"
 
 
 # For building rtorrent
-LIBCURL_NAME="curl-7.36.0"
+LIBCURL_NAME="curl-7.38.0"
 LIBCURL_URL="http://curl.haxx.se/download/$LIBCURL_NAME.tar.gz"
 SIGCPP20_NAME="libsigc++-2.3.1"
 SIGCPP20_URL="http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3/$SIGCPP20_NAME.tar.gz"
@@ -117,7 +125,7 @@ RTORRENT_REL_DOWNLOAD_DIR="downloads"
 RTORRENT_REL_WATCH_DIR="rtorrent/watch"
 RTORRENT_REL_SESSION_DIR="rtorrent/session"
 
-REQUIRED_PERL_MODULES="Time::HiRes XML::LibXML Archive::Zip Net::SSLeay HTML::Parser Digest::SHA1 JSON"
+REQUIRED_PERL_MODULES="Time::HiRes XML::LibXML Archive::Zip Net::SSLeay HTML::Parser Digest::SHA JSON"
 REQUIRED_PHP_MODULES="json xml sockets"
 
 # If set to y, add 'load perl' to .irssi/startup
@@ -2426,7 +2434,7 @@ osHandler_debian() {
 			addProgram perl
 			addPerlModule Archive::Zip libarchive-zip-perl
 			addPerlModule HTML::Parser libhtml-parser-perl
-			addPerlModule Digest::SHA1 libdigest-sha-perl
+			addPerlModule Digest::SHA libdigest-sha-perl
 			installPackages
 
 			installPerlModule Net::SSLeay libnet-ssleay-perl
@@ -3437,7 +3445,7 @@ EOF
 	rm -rf "$RUTORRENT_DIRNAME"
 	tmpName=rutorrent-tmp
 	rm -rf $tmpName
-	if ! svn co $SVN_OPTS "$RUTORRENT_TRUNK_DIR" $tmpName >/dev/null; then
+	if ! git clone "$RUTORRENT_TRUNK_DIR" $tmpName/rutorrent >/dev/null; then
 		# Subversion failed. Try the official tar balls
 		mkdir -p $tmpName
 		cd $tmpName
@@ -3452,6 +3460,7 @@ EOF
 	cd $tmpName
 	RUTORRENT_BASE_PATH="$WWW_ROOT/$RUTORRENT_DIRNAME"
 	initPluginDirVar
+	mv rutorrent/plugins/ .
 	mv rutorrent/ "$RUTORRENT_BASE_PATH"
 	mkdir -p "$RUTORRENT_BASE_PATH/plugins"
 	for plugin in $RUTORRENT_PLUGINS; do
