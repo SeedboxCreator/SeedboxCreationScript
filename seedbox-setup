@@ -23,10 +23,10 @@
 #
 # ***** END LICENSE BLOCK *****
 
-AUTODL_IRSSI_ZIP_URL="http://update.autodl-community.com/autodl-irssi-community.zip"
+AUTODL_IRSSI_ZIP_URL="https://github.com/autodl-community/autodl-irssi/archive/master.zip"
 GIT_PATH_RUTORRENT_PLUGIN="https://github.com/autodl-community/autodl-rutorrent.git"
 
-WEBMIN_URL="http://www.webmin.com/download/webmin-current.tar.gz"
+WEBMIN_URL="https://www.mirrorservice.org/sites/download.sourceforge.net/pub/sourceforge/w/we/webadmin/webmin/1.820/webmin-1.820.tar.gz"
 
 # RUTORRENT_TRUNK_DIR="https://rutorrent.googlecode.com/svn/trunk"
 RUTORRENT_TRUNK_DIR="https://github.com/Novik/ruTorrent.git"
@@ -96,22 +96,22 @@ LIBCURL_URL="http://curl.haxx.se/download/$LIBCURL_NAME.tar.gz"
 SIGCPP20_NAME="libsigc++-2.3.1"
 SIGCPP20_URL="http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3/$SIGCPP20_NAME.tar.gz"
 XMLRPC_SVN_DIR="https://svn.code.sf.net/p/xmlrpc-c/code/stable"
-LIBTORRENT_VERSION="0.13.4"
+LIBTORRENT_VERSION="0.13.6"
 LIBTORRENT_NAME="libtorrent-$LIBTORRENT_VERSION"
-LIBTORRENT_URL="http://libtorrent.rakshasa.no/downloads/$LIBTORRENT_NAME.tar.gz"
+LIBTORRENT_URL="http://rtorrent.net/downloads/$LIBTORRENT_NAME.tar.gz"
 LIBTORRENT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/$LIBTORRENT_NAME.tar.gz/download"
-RTORRENT_VERSION="0.9.4"
+RTORRENT_VERSION="0.9.6"
 RTORRENT_NAME="rtorrent-$RTORRENT_VERSION"
-RTORRENT_URL="http://libtorrent.rakshasa.no/downloads/$RTORRENT_NAME.tar.gz"
-RTORRENT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/$RTORRENT_NAME.tar.gz/download"
+RTORRENT_URL="http://rtorrent.net/downloads/$RTORRENT_NAME.tar.gz"
+#RTORRENT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/$RTORRENT_NAME.tar.gz/download"
 
 HTPASSWD_PY_SCRIPT_URL="http://trac.edgewall.org/export/10433/trunk/contrib/htpasswd.py"
 HTPASSWD_PY_SCRIPT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/htpasswd.py/download"
 
-NGINX_NAME="nginx-1.7.0"
+NGINX_NAME="nginx-1.9.15"
 NGINX_URL="http://nginx.org/download/$NGINX_NAME.tar.gz"
 
-LIGHTTPD_NAME="lighttpd-1.4.35"
+LIGHTTPD_NAME="lighttpd-1.4.43"
 LIGHTTPD_URL="http://download.lighttpd.net/lighttpd/releases-1.4.x/$LIGHTTPD_NAME.tar.gz"
 
 MOD_SCGI_VERSION="1.14"
@@ -949,13 +949,13 @@ installMissingPhpPackages() {
 	installPackages
 }
 
-installMissingPhp5Packages() {
-	PACKAGES=
-	for module in $MISSING_PHP_MODULES; do
-		PACKAGES="$PACKAGES php5-$module"
-	done
-	installPackages
-}
+#installMissingPhp5Packages() {
+#	PACKAGES=
+#	for module in $MISSING_PHP_MODULES; do
+#		PACKAGES="$PACKAGES php5-$module"
+#	done
+#	installPackages
+#}
 
 enablePhpIniModules() {
 	local phpIni="$1"
@@ -1292,90 +1292,6 @@ apacheCommonInitialization() {
 	fi
 }
 
-installCommonWebServerStuff_mandriva() {
-	# Also add some extra tools for ruTorrent and some of its plugins
-	PACKAGES="php-cli gzip curl openssl logrotate"
-	installPackages
-	PACKAGE="unrar"
-	installPackages
-	PACKAGES="php-geoip"
-	installPackages
-}
-
-# Used by Mandriva, Unity Linux, and PCLinuxOS
-installApache_mandriva() {
-	installCommonWebServerStuff_mandriva
-	PACKAGES="apache-mpm-prefork apache-mod_ssl apache-mod_php"
-	installPackages
-
-	WWW_PHP_INI=/etc/php.ini
-	APACHE_DIR=/etc/httpd
-	local APACHE_CONF_D=$APACHE_DIR/conf.d
-	local APACHE_SITES_DIR=$APACHE_DIR/conf/vhosts.d
-	APACHE_SCGI_FILE=$APACHE_CONF_D/scgi.conf
-	initializeApacheVars apache apache "$APACHE_SITES_DIR"
-	apacheCommonInitialization "libopenssl-devel apache-devel" $APACHE_DIR/modules
-
-	for file in 00_default_vhosts.conf 01_default_ssl_vhost.conf; do
-		[ -f "$APACHE_SITES_DIR/$file" ] && mv -f "$APACHE_SITES_DIR/$file" "$APACHE_SITES_DIR/$file-bak"
-	done
-
-	resetWebServerPermissions
-	chkconfig httpd on
-	service httpd restart || errorExit "Could not start $INSTALL_WEB_SERVER"
-}
-
-installCommonWebServerStuff_gentoo() {
-	# Also add some extra tools for ruTorrent and some of its plugins
-	PACKAGES="dev-lang/php logrotate"
-	addProgram gzip app-arch/gzip
-	addProgram curl net-misc/curl
-	addProgram openssl dev-libs/openssl
-	addProgram unrar app-arch/unrar
-	installPackages
-
-	ACCEPT_LICENSE=MaxMind
-	export ACCEPT_LICENSE
-	PACKAGES="dev-php5/pecl-geoip"
-	installPackages
-	unset ACCEPT_LICENSE
-}
-
-installApache_gentoo() {
-	installCommonWebServerStuff_gentoo
-	PACKAGES="www-servers/apache app-admin/apache-tools"
-	installPackages
-	PACKAGES="www-apache/mod_scgi"
-	installPackages
-
-	WWW_PHP_INI=$(ls /etc/php/apache2-php5*/php.ini | tail -n1)
-	[ -f "$WWW_PHP_INI" ] || errorExit "Could not find Apache php.ini file"
-	APACHE_DIR=/etc/apache2
-	local APACHE_CONF=$APACHE_DIR/httpd.conf
-	local APACHE_SITES_DIR=$APACHE_DIR/vhosts.d
-	local SERVER_ROOT=$(grep -E ^ServerRoot $APACHE_CONF | head -n1 | sed -e 's!^.*[ 	][^/]*\(/[^"]*\).*!\1!')
-	APACHE_SCGI_FILE="$APACHE_DIR/modules.d/scgi.conf"
-	[ -d "$SERVER_ROOT" ] || errorExit "Apache server root dir does not exist: $SERVER_ROOT"
-	initializeApacheVars apache apache "$APACHE_SITES_DIR"
-	apacheCommonInitialization "" $SERVER_ROOT/modules
-
-	for file in 00_default_ssl_vhost.conf 00_default_vhost.conf; do
-		[ -f "$APACHE_SITES_DIR/$file" ] && mv -f "$APACHE_SITES_DIR/$file" "$APACHE_SITES_DIR/$file-bak"
-	done
-
-	appendFileStringVar /etc/conf.d/apache2 APACHE2_OPTS "-D SCGI"
-	appendFileStringVar /etc/conf.d/apache2 APACHE2_OPTS "-D PHP5"
-	appendFileStringVar /etc/conf.d/apache2 APACHE2_OPTS "-D SSL"
-	cat >> $APACHE_SITE_FILE << EOF
-Listen $HTTP_PORT
-Listen $HTTPS_PORT
-EOF
-
-	resetWebServerPermissions
-	rc-update add apache2 default
-	osHandler_$os restart_$INSTALL_WEB_SERVER
-}
-
 nginxGetRpcMounts() {
 	if [ "$INSTALL_RUTORRENT" = y ]; then
 		local i=1
@@ -1537,18 +1453,6 @@ installNginx() {
 	resetWebServerPermissions
 	osHandler_$os installPhpCgiService
 	osHandler_$os installNginxService
-}
-
-preNginxInstall_gentoo() {
-	installCommonWebServerStuff_gentoo
-	PACKAGES="libpcre openssl zlib php"
-	installPackages
-	WWW_PHP_INI=$(ls /etc/php/cgi-php5*/php.ini | tail -n1)
-	[ -f "$WWW_PHP_INI" ] || errorExit "Could not find php-cgi php.ini file"
-}
-
-preLighttpdInstall_gentoo() {
-	preNginxInstall_gentoo
 }
 
 lighttpdGetRpcRequire() {
@@ -1873,18 +1777,6 @@ installVsftpd_chkconfig() {
 	fi
 }
 
-installVsftpd_gentoo() {
-	installProgram net-ftp/vsftpd
-	local vsftpdConf=/etc/vsftpd/vsftpd.conf
-	if ! [ -f $vsftpdConf ]; then
-		touch $vsftpdConf
-		[ -f $vsftpdConf.example ] && cp $vsftpdConf.example $vsftpdConf
-	fi
-	updateVsftpdConf $vsftpdConf
-	rc-update add vsftpd default
-	/etc/init.d/vsftpd restart
-}
-
 installService_chkconfig1() {
 	CHKCONFIG_SERVICE_NAME=$1
 	CHKCONFIG_SERVICE_FILE=/etc/init.d/$CHKCONFIG_SERVICE_NAME
@@ -2071,115 +1963,6 @@ $(getLsbStartupScriptContents "$STARTUPNAME" "$AUTODL_STARTUP_DESC")
 
 $(getCommonStartupScriptContents_autodl "$USER" "$STARTUPNAME")
 EOF
-}
-
-installService_mandriva() {
-	local serviceName="$1"
-	local headerCommand="$2"
-	installService_chkconfig1 $serviceName
-	cat > "$CHKCONFIG_SERVICE_FILE" << EOF
-#!/bin/bash
-$(eval $headerCommand)
-
-. /etc/rc.d/init.d/functions
-
-v_startIt() {
-	gprintf "Starting %s:" "\$NAME"
-	startIt && success "startup" || failure "startup"
-	echo
-}
-
-v_stopIt() {
-	gprintf "Stopping %s:" "\$NAME"
-	stopIt && success "stop" || failure "stop"
-	echo
-}
-
-$(getLsbStartupFooter "$CHKCONFIG_LOCK_FILE")
-EOF
-	[ $? -eq 0 ] || errorExit "Could not write to file $CHKCONFIG_SERVICE_FILE. Run this script as root."
-	installService_chkconfig2
-}
-
-installService_mandriva_autodl() {
-	local user=$1
-	installService_mandriva autodl_$user "getLsbStartupHeader_autodl \"$user\" \"\$CHKCONFIG_SERVICE_NAME\""
-}
-
-installService_mandriva_phpcgi() {
-	installService_mandriva phpcgi getLsbStartupHeader_phpcgi
-}
-
-installService_mandriva_nginx() {
-	installService_mandriva nginx getLsbStartupHeader_nginx
-}
-
-installService_mandriva_lighttpd() {
-	installService_mandriva lighttpd getLsbStartupHeader_lighttpd
-}
-
-installService_gentoo() {
-	local scriptName="$1"
-	local desc="$2"
-	local headerCommand="$3"
-	local serviceFile="/etc/init.d/$scriptName"
-
-	cat > "$serviceFile" << EOF
-#!/sbin/runscript
-
-name=$scriptName
-description="$desc"
-
-depend() {
-	need localmount
-	need net
-}
-
-$(eval $headerCommand)
-
-start() {
-	ebegin "Starting \$name"
-	startIt
-	eend \$?
-}
-
-stop() {
-	ebegin "Stopping \$name"
-	stopIt
-	eend \$?
-}
-
-status() {
-	if isStarted; then
-		einfo "status: started"
-		return 0
-	else
-		einfo "status: stopped"
-		return 1
-	fi
-}
-EOF
-	[ $? -eq 0 ] || errorExit "Could not write to file $serviceFile. Run this script as root."
-	chmod +x "$serviceFile"
-	rc-update add $scriptName default || errorExit "Could not add service $scriptName"
-	$serviceFile restart
-}
-
-installService_gentoo_autodl() {
-	local user="$1"
-	installService_gentoo autodl_$user "$AUTODL_STARTUP_DESC" "getCommonStartupScriptContents_autodl \"$user\" \"\$scriptName\""
-}
-
-installService_gentoo_phpcgi() {
-	installService_gentoo phpcgi "$PHPCGI_STARTUP_DESC" "getCommonStartupScriptContents_phpcgi \"$WWW_USER\" \"$WWW_PHP_CGI\""
-}
-
-installService_gentoo_nginx() {
-	installService_gentoo nginx "$NGINX_STARTUP_DESC" "getCommonStartupScriptContents_nginx \"$NGINX_BIN\""
-}
-
-installService_gentoo_lighttpd() {
-	installService_gentoo lighttpd "$LIGHTTPD_STARTUP_DESC" "getCommonStartupScriptContents_lighttpd \"$LIGHTTPD_BIN\""
 }
 
 installService_bsd_autodl() {
@@ -2468,7 +2251,7 @@ osHandler_debian() {
 			installPackages
 			;;
 		installPhpModules)
-			installMissingPhp5Packages
+			installMissingPhpPackages
 			;;
 		_installService)
 			local serviceName="$2"
@@ -2506,21 +2289,21 @@ EOF
 			;;
 		_installCommonWebServerStuff)
 			# Also add some extra tools for ruTorrent and some of its plugins
-			PACKAGES="php5-cli gzip curl openssl logrotate"
+			PACKAGES="php7.0-cli gzip curl openssl logrotate"
 			installPackages
 			# Ubuntu 8 doesn't have php5-geoip
-			PACKAGES="php5-geoip"
+			PACKAGES="php-geoip"
 			installPackages
 			PACKAGES="unrar"
 			installPackages
 			;;
 		installApache)
 			osHandler_$os _installCommonWebServerStuff
-			PACKAGES="apache2-mpm-prefork libapache2-mod-php5 php5 "
+			PACKAGES="libapache2-mpm-itk libapache2-mod-php php apache2"
 			installPackages
 			PACKAGES="libapache2-mod-scgi"; installPackages
 
-			WWW_PHP_INI=/etc/php5/apache2/php.ini
+			WWW_PHP_INI=/etc/php/7.0/apache2/php.ini
 			APACHE_DIR=/etc/apache2
 			APACHE_SITE_NAME=rutorrent.conf
 			APACHE_SCGI_FILE=$APACHE_DIR/mods-available/scgi.load
@@ -2551,7 +2334,7 @@ EOF
 		preNginxInstall)
 			WWW_PHP_INI=/etc/php5/cgi/php.ini
 			osHandler_$os _installCommonWebServerStuff
-			PACKAGES="libpcre3-dev libssl-dev zlib1g-dev php5-cgi"
+			PACKAGES="libpcre3-dev libssl-dev zlib1g-dev php7.0-cgi"
 			installPackages
 
 			# Make sure it builds on Debian GNU/kFreeBSD 6.0.
@@ -2572,7 +2355,7 @@ EOF
 		preLighttpdInstall)
 			WWW_PHP_INI=/etc/php5/cgi/php.ini
 			osHandler_$os _installCommonWebServerStuff
-			PACKAGES="libpcre3-dev libssl-dev zlib1g-dev php5-cgi"
+			PACKAGES="libpcre3-dev libssl-dev zlib1g-dev php7.0-cgi"
 			installPackages
 			;;
 		installLighttpdService)
@@ -2584,166 +2367,6 @@ EOF
 			;;
 		postWebminInstall)
 			addLsbHeaderToStartupScript /etc/init.d/webmin "webmin" "webmin"
-			;;
-		*)
-			;;
-	esac
-}
-
-osHandler_fedora() {
-	case $1 in
-		init)
-			INSTALL="yum -y install"
-			FEATURES="service rtorrent apache nginx lighttpd vsftpd webmin"
-			BUILD_TOOLS="gcc gcc-c++ make kernel-headers pkgconfig file libtool m4"
-			;;
-		init2)
-			installProgram which
-			installProgram ed
-			;;
-		installTools)
-			PACKAGES=
-			addProgram svn subversion
-			addProgram wget
-			addProgram unzip
-			addProgram screen
-			addProgram git
-			installPackages
-			;;
-		installAutodlTools)
-			if grep -q "release 4[. ]" /etc/redhat-release; then
-				IRSSI_LOAD_PERL=y
-			fi
-			PACKAGES=
-			addProgram perl
-			addProgram irssi
-			addPerlModule Time::HiRes perl-Time-HiRes
-			addPerlModule Archive::Zip perl-Archive-Zip
-			addPerlModule Net::SSLeay perl-Net-SSLeay
-			addPerlModule HTML::Parser perl-HTML-Parser
-			addPerlModule XML::LibXML perl-XML-LibXML
-			addPerlModule Digest::SHA1 perl-Digest-SHA1
-			addPerlModule JSON::XS perl-JSON-XS
-			addPerlModule JSON perl-JSON
-			installPackages
-			;;
-		installCpanTools)
-			# Need to remove the old JSON or cpan may fail to build the modules
-			if echo "$OLD_PERL_MODULES" | grep -qE '(^| )JSON( |$)'; then
-				yum -y remove perl-JSON
-			fi
-
-			# CentOS doesn't have 'perl-CPAN'. It's in the 'perl' package though.
-			PACKAGES="perl-CPAN"
-			if echo "$MISSING_PERL_MODULES" | grep -q 'XML::LibXML'; then
-				PACKAGES="$PACKAGES libxml2 libxml2-devel zlib zlib-devel"
-			fi
-			if echo "$MISSING_PERL_MODULES" | grep -q 'Net::SSLeay'; then
-				PACKAGES="$PACKAGES openssl openssl-devel zlib zlib-devel"
-			fi
-			installPackages
-			;;
-		installRtorrentBuildTools)
-			# CentOS 5: curl-devel, no libsigc++20
-			# Fedora 14: libcurl-devel
-			PACKAGES="libsigc++20-devel ncurses-devel openssl-devel libcurl-devel curl-devel"
-			installPackages
-			;;
-		installPhpModules)
-			;;
-		_installService)
-			local serviceName="$2"
-			local headerCommand="$3"
-			installService_chkconfig1 $serviceName
-			cat > "$CHKCONFIG_SERVICE_FILE" << EOF
-#!/bin/bash
-$(eval $headerCommand)
-
-. /etc/rc.d/init.d/functions
-
-v_startIt() {
-	echo -n "Starting \$NAME: "
-	startIt && success || failure
-	echo
-}
-
-v_stopIt() {
-	echo -n "Stopping \$NAME: "
-	stopIt && success || failure
-	echo
-}
-
-$(getLsbStartupFooter "$CHKCONFIG_LOCK_FILE")
-EOF
-			[ $? -eq 0 ] || errorExit "Could not write to file $CHKCONFIG_SERVICE_FILE. Run this script as root."
-			installService_chkconfig2
-			;;
-		installAutodlService)
-			local user=$2
-			osHandler_$os _installService autodl_$user "getLsbStartupHeader_autodl \"$user\" \"\$CHKCONFIG_SERVICE_NAME\""
-			;;
-		_installCommonWebServerStuff)
-			PACKAGE="php-cli gzip curl openssl unrar logrotate"
-			installPackages
-			# CentOS 4: will get an error about a php v4 dependency, so can't put it in above PACKAGE var
-			PACKAGES="php-pecl-geoip"
-			installPackages
-			;;
-		installApache)
-			osHandler_$os _installCommonWebServerStuff
-			# Also add some extra tools for ruTorrent and some of its plugins
-			PACKAGES="httpd httpd-tools mod_ssl mod_scgi php"
-			installPackages
-
-			WWW_PHP_INI=/etc/php.ini
-			APACHE_DIR=/etc/httpd
-			local APACHE_CONF_D=$APACHE_DIR/conf.d
-			APACHE_SCGI_FILE=$APACHE_CONF_D/scgi.conf
-			initializeApacheVars apache apache "$APACHE_CONF_D"
-			apacheCommonInitialization "httpd-devel" $APACHE_DIR/modules
-
-			[ -f "$APACHE_CONF_D/welcome.conf" ] && mv -f "$APACHE_CONF_D/welcome.conf" "$APACHE_CONF_D/welcome.conf-bak"
-			# Remove an Apache warning by commenting out the default SSL VirtualHost
-			sed_i '/^<VirtualHost _default_:443>/,/^<\/VirtualHost>/s/^/#/' $APACHE_CONF_D/ssl.conf
-
-			resetWebServerPermissions
-			chkconfig httpd on
-			service httpd restart || errorExit "Could not start $INSTALL_WEB_SERVER"
-			;;
-		restart_apache)
-			service httpd restart || errorExit "Could not start $INSTALL_WEB_SERVER"
-			;;
-		installVsftpd)
-			installVsftpd_chkconfig /etc/vsftpd/vsftpd.conf
-			;;
-		preNginxInstall)
-			WWW_PHP_INI=/etc/php.ini
-			osHandler_$os _installCommonWebServerStuff
-			PACKAGES="pcre-devel openssl-devel zlib-devel php-cgi"
-			installPackages
-			;;
-		installPhpCgiService)
-			osHandler_$os _installService phpcgi getLsbStartupHeader_phpcgi
-			;;
-		installNginxService)
-			osHandler_$os _installService nginx getLsbStartupHeader_nginx
-			;;
-		restart_nginx)
-			service phpcgi restart || errorExit "Could not start php-cgi"
-			service nginx restart || errorExit "Could not start $INSTALL_WEB_SERVER"
-			;;
-		preLighttpdInstall)
-			WWW_PHP_INI=/etc/php.ini
-			osHandler_$os _installCommonWebServerStuff
-			PACKAGES="pcre-devel openssl-devel zlib-devel php-cgi"
-			installPackages
-			;;
-		installLighttpdService)
-			osHandler_$os _installService lighttpd getLsbStartupHeader_lighttpd
-			;;
-		restart_lighttpd)
-			service phpcgi restart || errorExit "Could not start php-cgi"
-			service lighttpd restart || errorExit "Could not start $INSTALL_WEB_SERVER"
 			;;
 		*)
 			;;
@@ -2972,7 +2595,7 @@ EOF
 	echo "${CMSG}Unpacking autodl-irssi...$CEND"
 	unzip -o autodl-irssi.zip > /dev/null || errorExit "Could not unpack autodl-irssi zip file"
 	rm -f autodl-irssi.zip
-	cp autodl-irssi.pl autorun/ || errorExit "Could not copy autodl-irssi.pl to Irssi autorun dir."
+	cp autodl-irssi-master/autodl-irssi.pl autorun/ || errorExit "Could not copy autodl-irssi.pl to Irssi autorun dir."
 	mkdir -p "$userDir/.autodl"
 	touch "$userDir/.autodl/autodl.cfg"
 	if ! [ -s "$userDir/.autodl/autodl.cfg" ]; then
