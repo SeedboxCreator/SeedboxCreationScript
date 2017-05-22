@@ -26,7 +26,7 @@
 AUTODL_IRSSI_ZIP_URL="https://github.com/autodl-community/autodl-irssi/archive/master.zip"
 GIT_PATH_RUTORRENT_PLUGIN="https://github.com/autodl-community/autodl-rutorrent.git"
 
-WEBMIN_URL="https://sourceforge.mirrorservice.org/w/we/webadmin/webmin/1.830/webmin-1.830.tar.gz"
+WEBMIN_URL="https://sourceforge.mirrorservice.org/w/we/webadmin/webmin/1.840/webmin-1.840.tar.gz"
 
 # RUTORRENT_TRUNK_DIR="https://rutorrent.googlecode.com/svn/trunk"
 RUTORRENT_TRUNK_DIR="https://github.com/Novik/ruTorrent.git"
@@ -91,10 +91,10 @@ RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS unpack"
 
 
 # For building rtorrent
-LIBCURL_NAME="curl-7.52.1"
+LIBCURL_NAME="curl-7.54.0"
 LIBCURL_URL="http://curl.haxx.se/download/$LIBCURL_NAME.tar.gz"
-SIGCPP20_NAME="libsigc++-2.10.0"
-SIGCPP20_URL="http://ftp.acc.umu.se/pub/GNOME/sources/libsigc++/2.10/$SIGCPP20_NAME.tar.gz"
+SIGCPP20_NAME="libsigc++-2.99.8"
+SIGCPP20_URL="http://ftp.acc.umu.se/pub/GNOME/sources/libsigc++/2.99/$SIGCPP20_NAME.tar.gz"
 XMLRPC_SVN_DIR="https://svn.code.sf.net/p/xmlrpc-c/code/stable"
 LIBTORRENT_VERSION="0.13.6"
 LIBTORRENT_NAME="libtorrent-$LIBTORRENT_VERSION"
@@ -108,7 +108,7 @@ RTORRENT_URL="http://rtorrent.net/downloads/$RTORRENT_NAME.tar.gz"
 HTPASSWD_PY_SCRIPT_URL="http://trac.edgewall.org/export/10433/trunk/contrib/htpasswd.py"
 HTPASSWD_PY_SCRIPT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/htpasswd.py/download"
 
-NGINX_NAME="nginx-1.11.9"
+NGINX_NAME="nginx-1.13.0"
 NGINX_URL="http://nginx.org/download/$NGINX_NAME.tar.gz"
 
 LIGHTTPD_NAME="lighttpd-1.4.45"
@@ -117,7 +117,7 @@ LIGHTTPD_URL="http://download.lighttpd.net/lighttpd/releases-1.4.x/$LIGHTTPD_NAM
 MOD_SCGI_VERSION="1.15"
 MOD_SCGI_URL="http://python.ca/scgi/releases/scgi-$MOD_SCGI_VERSION.tar.gz"
 
-UNRAR_VERSION="5.4.5"
+UNRAR_VERSION="5.5.3"
 UNRAR_URL="http://www.rarlab.com/rar/unrarsrc-$UNRAR_VERSION.tar.gz"
 
 # Dirs relative to user's home directory
