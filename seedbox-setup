@@ -26,19 +26,21 @@
 AUTODL_IRSSI_ZIP_URL="https://github.com/autodl-community/autodl-irssi/archive/master.zip"
 GIT_PATH_RUTORRENT_PLUGIN="https://github.com/autodl-community/autodl-rutorrent.git"
 
-WEBMIN_URL="https://sourceforge.mirrorservice.org/w/we/webadmin/webmin/1.900/webmin-1.900.tar.gz"
+WEBMIN_URL="https://sourceforge.net/projects/webadmin/files/webmin/1.920/webmin-1.920.tar.gz"
 
 # RUTORRENT_TRUNK_DIR="https://rutorrent.googlecode.com/svn/trunk"
 RUTORRENT_TRUNK_DIR="https://github.com/Novik/ruTorrent.git"
 
 # The official tarballs are tried if git fails.
-RUTORRENT_VERSION="3.7"
-RUTORRENT_CORE_NAME="rutorrent-$RUTORRENT_VERSION.tar.gz"
-RUTORRENT_CORE_URL="http://dl.bintray.com/novik65/generic/$RUTORRENT_CORE_NAME"
+RUTORRENT_VERSION="3.9"
+#RUTORRENT_CORE_NAME="rutorrent-$RUTORRENT_VERSION.tar.gz"
+RUTORRENT_CORE_NAME="v$RUTORRENT_VERSION.tar.gz"
+#RUTORRENT_CORE_URL="http://dl.bintray.com/novik65/generic/$RUTORRENT_CORE_NAME"
+RUTORRENT_CORE_URL="https://github.com/Novik/ruTorrent/archive/$RUTORRENT_CORE_NAME"
 #RUTORRENT_CORE_URL="http://rutorrent.googlecode.com/files/$RUTORRENT_CORE_NAME"
-RUTORRENT_PLUGINS_NAME="plugins-$RUTORRENT_VERSION.tar.gz"
+#RUTORRENT_PLUGINS_NAME="plugins-$RUTORRENT_VERSION.tar.gz"
 #RUTORRENT_PLUGINS_URL="http://rutorrent.googlecode.com/files/$RUTORRENT_PLUGINS_NAME"
-RUTORRENT_PLUGINS_URL="http://dl.bintray.com/novik65/generic/$RUTORRENT_PLUGINS_NAME"
+#RUTORRENT_PLUGINS_URL="http://dl.bintray.com/novik65/generic/$RUTORRENT_PLUGINS_NAME"
 #RUTORRENT_CORE_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/$RUTORRENT_CORE_NAME/download"
 #RUTORRENT_PLUGINS_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/$RUTORRENT_PLUGINS_NAME/download"
 
@@ -91,30 +93,30 @@ RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS unpack"
 
 
 # For building rtorrent
-LIBCURL_NAME="curl-7.65.1"
+LIBCURL_NAME="curl-7.65.3"
 LIBCURL_URL="http://curl.haxx.se/download/$LIBCURL_NAME.tar.gz"
 SIGCPP20_NAME="libsigc++-2.99.13"
 SIGCPP20_URL="http://ftp.acc.umu.se/pub/GNOME/sources/libsigc++/2.99/$SIGCPP20_NAME.tar.gz"
 XMLRPC_SVN_DIR="https://svn.code.sf.net/p/xmlrpc-c/code/stable"
-LIBTORRENT_VERSION="0.13.7"
+LIBTORRENT_VERSION="0.13.8"
 LIBTORRENT_NAME="libtorrent-$LIBTORRENT_VERSION"
-LIBTORRENT_URL="https://github.com/SeedboxCreator/SeedboxCreationScript/raw/master/$LIBTORRENT_NAME.tar.gz"
+#LIBTORRENT_URL="https://github.com/SeedboxCreator/SeedboxCreationScript/raw/master/$LIBTORRENT_NAME.tar.gz"
 #LIBTORRENT_GIT="https://github.com/rakshasa/libtorrent.git"
-#LIBTORRENT_URL="http://rtorrent.net/downloads/$LIBTORRENT_NAME.tar.gz"
+LIBTORRENT_URL="http://rtorrent.net/downloads/$LIBTORRENT_NAME.tar.gz"
 #LIBTORRENT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/$LIBTORRENT_NAME.tar.gz/download"
 #LIBTORRENT_URL3="https://github.com/rakshasa/rtorrent/releases/download/v0.9.7/$LIBTORRENT_NAME.tar.gz"
-RTORRENT_VERSION="0.9.7"
+RTORRENT_VERSION="0.9.8"
 RTORRENT_NAME="rtorrent-$RTORRENT_VERSION"
-RTORRENT_URL="https://github.com/SeedboxCreator/SeedboxCreationScript/raw/master/$RTORRENT_NAME.tar.gz"
+#RTORRENT_URL="https://github.com/SeedboxCreator/SeedboxCreationScript/raw/master/$RTORRENT_NAME.tar.gz"
 #RTORRENT_GIT="https://github.com/rakshasa/rtorrent.git"
-#RTORRENT_URL="http://rtorrent.net/downloads/RTORRENT_NAME.tar.gz"
+RTORRENT_URL="http://rtorrent.net/downloads/$RTORRENT_NAME.tar.gz"
 #RTORRENT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/$RTORRENT_NAME.tar.gz/download"
 #RTORRENT_URL3="https://github.com/rakshasa/rtorrent/releases/download/v0.9.7/$RTORRENT_NAME.tar.gz"
 
 HTPASSWD_PY_SCRIPT_URL="http://trac.edgewall.org/export/10433/trunk/contrib/htpasswd.py"
 HTPASSWD_PY_SCRIPT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/htpasswd.py/download"
 
-NGINX_NAME="nginx-1.17.0"
+NGINX_NAME="nginx-1.17.2"
 NGINX_URL="http://nginx.org/download/$NGINX_NAME.tar.gz"
 
 LIGHTTPD_NAME="lighttpd-1.4.54"
@@ -123,8 +125,8 @@ LIGHTTPD_URL="http://download.lighttpd.net/lighttpd/releases-1.4.x/$LIGHTTPD_NAM
 MOD_SCGI_VERSION="1.15"
 MOD_SCGI_URL="http://python.ca/scgi/releases/scgi-$MOD_SCGI_VERSION.tar.gz"
 
-UNRAR_VERSION="5.5.8"
-UNRAR_URL="http://www.rarlab.com/rar/unrarsrc-$UNRAR_VERSION.tar.gz"
+#UNRAR_VERSION="5.7.5"
+#UNRAR_URL="http://www.rarlab.com/rar/unrarsrc-$UNRAR_VERSION.tar.gz"
 
 # Dirs relative to user's home directory
 RTORRENT_REL_DOWNLOAD_DIR="downloads"
@@ -805,11 +807,11 @@ installRtorrent() {
 	buildEnd
 }
 
-installUnrar() {
-	isProgramInstalled unrar && return
-	installBuildTools
-	buildMakeProgram "$UNRAR_URL" "unrar" "" "unrar" "makefile.unix"
-}
+#installUnrar() {
+#	isProgramInstalled unrar && return
+#	installBuildTools
+#	buildMakeProgram "$UNRAR_URL" "unrar" "" "unrar" "makefile.unix"
+#}
 
 installModScgi() {
 	local modScgiFile="$1"
@@ -1202,6 +1204,12 @@ initializeApacheVars() {
 	WWW_PEMFILE=$APACHE_DIR/rutorrent.pem
 	WWW_USER="$apacheUser"
 	WWW_GROUP="$apacheGroup"
+	APACHE_RUN_USER=www-data
+	APACHE_RUN_GROUP=www-data
+	APACHE_PID_FILE=/var/run/apache2/apache2.pid
+	APACHE_RUN_DIR=/var/run/apache2
+	APACHE_LOCK_DIR=/var/lock/apache2
+	APACHE_LOG_DIR=/var/log/apache2
 }
 
 apacheGetRpcLocationDirectives() {
@@ -1442,7 +1450,7 @@ installNginx() {
 	CREATE_ONE_PASSWORD_FILE_PER_USER=y
 	installBuildTools
 	osHandler_$os preNginxInstall
-	installUnrar
+	#installUnrar
 
 	NGINX_DIR=/usr/local/nginx
 	initializeWwwRootVar
@@ -1667,7 +1675,7 @@ installLighttpd() {
 	SCGI_USE_UNIX_DOMAIN_SOCKET=y
 	installBuildTools
 	osHandler_$os preLighttpdInstall
-	installUnrar
+	#installUnrar
 
 	LIGHTTPD_DIR=/usr/local/lighttpd
 	initializeWwwRootVar
@@ -2303,13 +2311,36 @@ EOF
 			;;
 		_installCommonWebServerStuff)
 			# Also add some extra tools for ruTorrent and some of its plugins
-			PACKAGES="php7.0-cli gzip curl openssl logrotate"
+			#PACKAGES="php7.0-cli gzip curl openssl logrotate"
+			if [ -f /etc/os-release ]; then
+				. /etc/os-release
+				OS_RELEASE_NAME=$ID
+				#OS_RELEASE_VERSION=$VERSION_ID
+					if [ "$OS_RELEASE_NAME" = "ubuntu" ];then
+					UBUNTU_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/[.]//')
+						if [ "$UBUNTU_RELEASE" -le "1604" ]; then
+						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.0-cgi ffmpeg"
+						elif [ "$UBUNTU_RELEASE" -gt "1604" ]; then
+						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.2-cgi ffmpeg"
+						fi
+					elif [ "$OS_RELEASE_NAME" = "debian" ];then
+					DEBIAN_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/\..*$//')
+						if [ "$DEBIAN_RELEASE" -le "8" ]; then
+						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php5-cgi"
+						echo "OS is Debian 8 or earlier"
+						elif [ "$DEBIAN_RELEASE" -eq "9" ]; then
+						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.0-cgi ffmpeg"
+						elif [ "$DEBIAN_RELEASE" -ge "10" ]; then
+						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.3-cgi ffmpeg"
+						fi
+					fi
+				fi
 			installPackages
 			# Ubuntu 8 doesn't have php5-geoip
 			PACKAGES="php-geoip"
 			installPackages
-			PACKAGES="unrar"
-			installPackages
+			#PACKAGES="unrar"
+			#installPackages
 			;;
 		installApache)
 			osHandler_$os _installCommonWebServerStuff
@@ -2335,6 +2366,13 @@ EOF
 				echo "Listen $HTTPS_PORT" >> "$APACHE_DIR/ports.conf"
 			fi
 			resetWebServerPermissions
+			#echo "Adding Apache Environment Variables"
+			#APACHE_RUN_USER=www-data
+			#APACHE_RUN_GROUP=www-data
+			#APACHE_PID_FILE=/var/run/apache2/apache2.pid
+			#APACHE_RUN_DIR=/var/run/apache2
+			#APACHE_LOCK_DIR=/var/lock/apache2
+			#APACHE_LOG_DIR=/var/log/apache2
 			invoke-rc.d apache2 restart || errorExit "Could not start $INSTALL_WEB_SERVER"
 			;;
 		restart_apache)
@@ -2348,13 +2386,7 @@ EOF
 		preNginxInstall)
 			WWW_PHP_INI=/etc/php5/cgi/php.ini
 			osHandler_$os _installCommonWebServerStuff
-			UBUNTU_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/[.]//')
-			if [ "$UBUNTU_RELEASE" -le "1604" ]; then
-			PACKAGES="libpcre3-dev libssl-dev zlib1g-dev php7.0-cgi"
-			elif [ "$UBUNTU_RELEASE" -gt "1604" ]; then
-			PACKAGES="libpcre3-dev libssl-dev zlib1g-dev php7.2-cgi"
-			fi
-			installPackages
+			#installPackages
 
 			# Make sure it builds on Debian GNU/kFreeBSD 6.0.
 			if [ "$(uname -s)" != Linux ]; then
@@ -2374,13 +2406,7 @@ EOF
 		preLighttpdInstall)
 			WWW_PHP_INI=/etc/php5/cgi/php.ini
 			osHandler_$os _installCommonWebServerStuff
-			UBUNTU_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/[.]//')
-			if [ "$UBUNTU_RELEASE" -le "1604" ]; then
-			PACKAGES="libpcre3-dev libssl-dev zlib1g-dev php7.0-cgi"
-			elif [ "$UBUNTU_RELEASE" -gt "1604" ]; then
-			PACKAGES="libpcre3-dev libssl-dev zlib1g-dev php7.2-cgi"
-			fi
-			installPackages
+			#installPackages
 			;;
 		installLighttpdService)
 			osHandler_$os _installService lighttpd getLsbStartupHeader_lighttpd
@@ -2670,6 +2696,7 @@ EOF
 
 	resetOwner "$osUser" "$userDir/.autodl" "$userDir/.irssi"
 	chmod 0700 "$userDir/.autodl" "$userDir/.irssi"
+	cp -r "$userDir/.irssi/scripts/autodl-irssi-master/AutodlIrssi/" "$userDir/.irssi/scripts/"
 }
 
 getRutorrentUserConfDir() {
@@ -3044,7 +3071,7 @@ elif [ "$INSTALL_WEB_SERVER" = apache ]; then
 	echo ""
 	echo "${CMSG}Installing Apache$CEND"
 	osHandler_$os installApache
-	installUnrar
+	#installUnrar
 elif [ "$INSTALL_WEB_SERVER" = nginx ]; then
 	echo ""
 	echo "${CMSG}Installing nginx$CEND"
@@ -3097,8 +3124,9 @@ EOF
 		mkdir -p $tmpName
 		cd $tmpName
 		downloadFile "$RUTORRENT_CORE_NAME" "$RUTORRENT_CORE_URL" "$RUTORRENT_CORE_URL2" || errorExit "Could not download ruTorrent."
-		downloadFile "$RUTORRENT_PLUGINS_NAME" "$RUTORRENT_PLUGINS_URL" "$RUTORRENT_PLUGINS_URL2" || errorExit "Could not download ruTorrent plugins."
-		for name in "$RUTORRENT_CORE_NAME" "$RUTORRENT_PLUGINS_NAME"; do
+		#downloadFile "$RUTORRENT_PLUGINS_NAME" "$RUTORRENT_PLUGINS_URL" "$RUTORRENT_PLUGINS_URL2" || errorExit "Could not download ruTorrent plugins."
+		#for name in "$RUTORRENT_CORE_NAME" "$RUTORRENT_PLUGINS_NAME"; do
+		for name in "$RUTORRENT_CORE_NAME"; do
 			tar xzf "$name" || errorExit "Could not unpack $name"
 			rm -f "$name"
 		done
@@ -3198,10 +3226,10 @@ trackers.enable = 1
 #max_uploads = 15
 #download_rate = 0
 #upload_rate = 0
-use_udp_trackers = yes
+#use_udp_trackers = yes
 dht = auto
 dht_port = 6881
-peer_exchange = yes
+#peer_exchange = yes
 #hash_read_ahead = 10
 #hash_interval = 100
 #hash_max_tries = 10
