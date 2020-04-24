@@ -125,8 +125,8 @@ LIGHTTPD_URL="http://download.lighttpd.net/lighttpd/releases-1.4.x/$LIGHTTPD_NAM
 MOD_SCGI_VERSION="1.16"
 MOD_SCGI_URL="http://python.ca/scgi/releases/scgi-$MOD_SCGI_VERSION.tar.gz"
 
-#UNRAR_VERSION="5.8.5"
-#UNRAR_URL="http://www.rarlab.com/rar/unrarsrc-$UNRAR_VERSION.tar.gz"
+UNRAR_VERSION="5.8.5"
+UNRAR_URL="http://www.rarlab.com/rar/unrarsrc-$UNRAR_VERSION.tar.gz"
 
 # Dirs relative to user's home directory
 RTORRENT_REL_DOWNLOAD_DIR="downloads"
