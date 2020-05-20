@@ -2320,8 +2320,10 @@ EOF
 					UBUNTU_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/[.]//')
 						if [ "$UBUNTU_RELEASE" -le "1604" ]; then
 						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.0-cgi ffmpeg"
-						elif [ "$UBUNTU_RELEASE" -gt "1604" ]; then
+						elif [ "$UBUNTU_RELEASE" -eq "1804" ]; then
 						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.2-cgi ffmpeg"
+						elif [ "$UBUNTU_RELEASE" -gt "1804" ]; then
+						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.4-cgi ffmpeg"
 						fi
 					elif [ "$OS_RELEASE_NAME" = "debian" ];then
 					DEBIAN_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/\..*$//')
