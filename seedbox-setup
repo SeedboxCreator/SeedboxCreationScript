@@ -23,16 +23,28 @@
 #
 # ***** END LICENSE BLOCK *****
 
+if [ -f /etc/os-release ]; then
+	. /etc/os-release
+	OS_RELEASE_NAME=$ID
+	if [ "$OS_RELEASE_NAME" = "ubuntu" ];then
+		UBUNTU_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/[.]//')
+		if [ "$UBUNTU_RELEASE" -gt "1804" ]; then
+			echo "deb http://de.archive.ubuntu.com/ubuntu bionic main universe" | sudo tee -a /etc/apt/sources.list
+		fi
+	fi
+fi
+apt-get update
+
 AUTODL_IRSSI_ZIP_URL="https://github.com/autodl-community/autodl-irssi/archive/master.zip"
 GIT_PATH_RUTORRENT_PLUGIN="https://github.com/autodl-community/autodl-rutorrent.git"
 
-WEBMIN_URL="https://sourceforge.net/projects/webadmin/files/webmin/1.941/webmin-1.941.tar.gz"
+WEBMIN_URL="https://sourceforge.net/projects/webadmin/files/webmin/1.955/webmin-1.955.tar.gz"
 
 # RUTORRENT_TRUNK_DIR="https://rutorrent.googlecode.com/svn/trunk"
 RUTORRENT_TRUNK_DIR="https://github.com/Novik/ruTorrent.git"
 
 # The official tarballs are tried if git fails.
-RUTORRENT_VERSION="3.9"
+RUTORRENT_VERSION="3.10"
 #RUTORRENT_CORE_NAME="rutorrent-$RUTORRENT_VERSION.tar.gz"
 RUTORRENT_CORE_NAME="v$RUTORRENT_VERSION.tar.gz"
 #RUTORRENT_CORE_URL="http://dl.bintray.com/novik65/generic/$RUTORRENT_CORE_NAME"
@@ -93,10 +105,10 @@ RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS unpack"
 
 
 # For building rtorrent
-LIBCURL_NAME="curl-7.69.1"
+LIBCURL_NAME="curl-7.72.0"
 LIBCURL_URL="http://curl.haxx.se/download/$LIBCURL_NAME.tar.gz"
-SIGCPP20_NAME="libsigc++-3.0.3"
-SIGCPP20_URL="http://ftp.acc.umu.se/pub/GNOME/sources/libsigc++/2.99/$SIGCPP20_NAME.tar.gz"
+SIGCPP20_NAME="libsigc++-3.0.4"
+SIGCPP20_URL="http://ftp.acc.umu.se/pub/GNOME/sources/libsigc++/3.0/$SIGCPP20_NAME.tar.gz"
 XMLRPC_SVN_DIR="https://svn.code.sf.net/p/xmlrpc-c/code/stable"
 LIBTORRENT_VERSION="0.13.8"
 LIBTORRENT_NAME="libtorrent-$LIBTORRENT_VERSION"
@@ -116,16 +128,16 @@ RTORRENT_URL="http://rtorrent.net/downloads/$RTORRENT_NAME.tar.gz"
 HTPASSWD_PY_SCRIPT_URL="http://trac.edgewall.org/export/10433/trunk/contrib/htpasswd.py"
 HTPASSWD_PY_SCRIPT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/htpasswd.py/download"
 
-NGINX_NAME="nginx-1.18.0"
+NGINX_NAME="nginx-1.19.3"
 NGINX_URL="http://nginx.org/download/$NGINX_NAME.tar.gz"
 
 LIGHTTPD_NAME="lighttpd-1.4.55"
 LIGHTTPD_URL="http://download.lighttpd.net/lighttpd/releases-1.4.x/$LIGHTTPD_NAME.tar.gz"
 
-MOD_SCGI_VERSION="1.16"
+MOD_SCGI_VERSION="2.0"
 MOD_SCGI_URL="http://python.ca/scgi/releases/scgi-$MOD_SCGI_VERSION.tar.gz"
 
-UNRAR_VERSION="5.8.5"
+UNRAR_VERSION="5.9.4"
 UNRAR_URL="http://www.rarlab.com/rar/unrarsrc-$UNRAR_VERSION.tar.gz"
 
 # Dirs relative to user's home directory
@@ -1050,7 +1062,7 @@ createSelfSignedCertFile() {
 	if [ ! -f "$OTHER_PEM_FILE" ]; then
 		echo "${CMSG}Creating the self-signed certificate.$CEND"
 		rm -f "$pemfile"
-		openssl req -new -newkey rsa:1024 -days 1000 -nodes -x509 -keyout "$pemfile" -out "$pemfile" -batch \
+		openssl req -new -newkey rsa:2048 -days 1000 -nodes -x509 -keyout "$pemfile" -out "$pemfile" -batch \
 			|| errorExit "Failed to create self-signed certificate."
 		OTHER_PEM_FILE="$pemfile"
 		CREATED_CERT_FILE=y
@@ -2213,6 +2225,7 @@ osHandler_debian() {
 			BUILD_TOOLS="build-essential make file pkg-config libtool m4 zlib1g-dev automake"
 			;;
 		init2)
+
 			apt-get update
 			#export DEBIAN_FRONTEND=noninteractive
 			installProgram ed
@@ -2324,6 +2337,7 @@ EOF
 						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.2-cgi ffmpeg"
 						elif [ "$UBUNTU_RELEASE" -gt "1804" ]; then
 						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.4-cgi ffmpeg"
+						#echo "deb http://de.archive.ubuntu.com/ubuntu bionic main universe" | sudo tee -a /etc/apt/sources.list
 						fi
 					elif [ "$OS_RELEASE_NAME" = "debian" ];then
 					DEBIAN_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/\..*$//')
@@ -2350,7 +2364,15 @@ EOF
 			installPackages
 			PACKAGES="libapache2-mod-scgi"; installPackages
 
-			WWW_PHP_INI=/etc/php/7.0/apache2/php.ini
+			if [ "$OS_RELEASE_NAME" = "ubuntu" ];then
+				UBUNTU_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/[.]//')
+					if [ "$UBUNTU_RELEASE" -le "1804" ]; then
+					WWW_PHP_INI=/etc/php/7.0/apache2/php.ini
+					elif [ "$UBUNTU_RELEASE" -gt "1804" ]; then
+					WWW_PHP_INI=/etc/php/7.4/apache2/php.ini
+					fi
+				fi
+			#WWW_PHP_INI=/etc/php/7.0/apache2/php.ini
 			APACHE_DIR=/etc/apache2
 			APACHE_SITE_NAME=rutorrent.conf
 			APACHE_SCGI_FILE=$APACHE_DIR/mods-available/scgi.load
