@@ -38,7 +38,7 @@ apt-get update
 AUTODL_IRSSI_ZIP_URL="https://github.com/autodl-community/autodl-irssi/archive/master.zip"
 GIT_PATH_RUTORRENT_PLUGIN="https://github.com/autodl-community/autodl-rutorrent.git"
 
-WEBMIN_URL="https://sourceforge.net/projects/webadmin/files/webmin/1.979/webmin-1.979.tar.gz"
+WEBMIN_URL="https://sourceforge.net/projects/webadmin/files/webmin/1.981/webmin-1.981.tar.gz"
 
 # RUTORRENT_TRUNK_DIR="https://rutorrent.googlecode.com/svn/trunk"
 RUTORRENT_TRUNK_DIR="https://github.com/Novik/ruTorrent.git"
@@ -105,7 +105,7 @@ RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS unpack"
 
 
 # For building rtorrent
-LIBCURL_NAME="curl-7.78.0"
+LIBCURL_NAME="curl-7.80.0"
 LIBCURL_URL="http://curl.haxx.se/download/$LIBCURL_NAME.tar.gz"
 SIGCPP20_NAME="libsigc++-3.0.7"
 SIGCPP20_URL="http://ftp.acc.umu.se/pub/GNOME/sources/libsigc++/3.0/$SIGCPP20_NAME.tar.gz"
@@ -114,27 +114,23 @@ LIBTORRENT_VERSION="0.13.8"
 LIBTORRENT_NAME="libtorrent-$LIBTORRENT_VERSION"
 #LIBTORRENT_URL="https://github.com/SeedboxCreator/SeedboxCreationScript/raw/master/$LIBTORRENT_NAME.tar.gz"
 #LIBTORRENT_GIT="https://github.com/rakshasa/libtorrent.git"
-#LIBTORRENT_URL="http://rtorrent.net/downloads/$LIBTORRENT_NAME.tar.gz"
-#LIBTORRENT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/$LIBTORRENT_NAME.tar.gz/download"
 LIBTORRENT_URL3="https://github.com/rakshasa/rtorrent/releases/download/v0.9.8/$LIBTORRENT_NAME.tar.gz"
 RTORRENT_VERSION="0.9.8"
 RTORRENT_NAME="rtorrent-$RTORRENT_VERSION"
 #RTORRENT_URL="https://github.com/SeedboxCreator/SeedboxCreationScript/raw/master/$RTORRENT_NAME.tar.gz"
 #RTORRENT_GIT="https://github.com/rakshasa/rtorrent.git"
-#RTORRENT_URL="http://rtorrent.net/downloads/$RTORRENT_NAME.tar.gz"
-#RTORRENT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/$RTORRENT_NAME.tar.gz/download"
 RTORRENT_URL3="https://github.com/rakshasa/rtorrent/releases/download/v0.9.8/$RTORRENT_NAME.tar.gz"
 
 HTPASSWD_PY_SCRIPT_URL="http://trac.edgewall.org/export/10433/trunk/contrib/htpasswd.py"
 HTPASSWD_PY_SCRIPT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/htpasswd.py/download"
 
-NGINX_NAME="nginx-1.21.1"
+NGINX_NAME="nginx-1.21.4"
 NGINX_URL="http://nginx.org/download/$NGINX_NAME.tar.gz"
 
-LIGHTTPD_NAME="lighttpd-1.4.59"
+LIGHTTPD_NAME="lighttpd-1.4.61"
 LIGHTTPD_URL="http://download.lighttpd.net/lighttpd/releases-1.4.x/$LIGHTTPD_NAME.tar.gz"
 
-MOD_SCGI_VERSION="2.0"
+MOD_SCGI_VERSION="2.2"
 MOD_SCGI_URL="http://python.ca/scgi/releases/scgi-$MOD_SCGI_VERSION.tar.gz"
 
 UNRAR_VERSION="6.0.7"
