@@ -1350,14 +1350,13 @@ nginxGetServerSection() {
 
 	cat << EOF
 	server {
-		listen $port;
+		listen $port ssl;
 		server_name localhost;
 		auth_basic "$RUTORRENT_SITE_REALM";
 		auth_basic_user_file "$WWW_PASSWORD_FILE";
 
 $(if [ "$ssl" = y ]; then
 	cat << EOF2
-		ssl on;
 		ssl_certificate $WWW_PEMFILE;
 		ssl_certificate_key $WWW_PEMFILE;
 EOF2
@@ -3236,7 +3235,7 @@ check_hash = no
 directory = $RTORRENT_DOWNLOAD_DIR
 session = $RTORRENT_SESSION_DIR
 encryption = allow_incoming, try_outgoing, enable_retry
-schedule = watch_directory,1,1,"load_start=$RTORRENT_WATCH_DIR/*.torrent"
+schedule = watch_directory,1,1,"load.start=$RTORRENT_WATCH_DIR/*.torrent"
 #schedule = untied_directory,5,5,"stop_untied=$RTORRENT_WATCH_DIR/*.torrent"
 trackers.enable = 1
 #min_peers = 40
@@ -3246,10 +3245,10 @@ trackers.enable = 1
 #max_uploads = 15
 #download_rate = 0
 #upload_rate = 0
-#use_udp_trackers = yes
+#trackers.use_udp = yes
 dht = auto
 dht_port = 6881
-#peer_exchange = yes
+#protocol.pex.set = yes
 #hash_read_ahead = 10
 #hash_interval = 100
 #hash_max_tries = 10
