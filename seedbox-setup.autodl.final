@@ -25,10 +25,18 @@
 
 apt-get update
 
-WEBMIN_VERSION="2.640"
-WEBMIN_URL="https://sourceforge.net/projects/webadmin/files/webmin/$WEBMIN_VERSION/webmin-$WEBMIN_VERSION.tar.gz/download"
+AUTODL_IRSSI_ZIP_URL="https://github.com/autodl-community/autodl-irssi/archive/master.zip"
+GIT_PATH_RUTORRENT_PLUGIN="https://github.com/autodl-community/autodl-rutorrent.git"
+
+WEBMIN_URL="https://sourceforge.net/projects/webadmin/files/webmin/2.402/webmin-2.402.tar.gz/download"
 
 RUTORRENT_TRUNK_DIR="https://github.com/Novik/ruTorrent.git"
+
+# The official tarballs are tried if git fails.
+RUTORRENT_VERSION="4.3.11"
+#RUTORRENT_CORE_NAME="rutorrent-$RUTORRENT_VERSION.tar.gz"
+RUTORRENT_CORE_NAME="v$RUTORRENT_VERSION.tar.gz"
+RUTORRENT_CORE_URL="https://github.com/Novik/ruTorrent/archive/$RUTORRENT_CORE_NAME"
 
 RUTORRENT_PLUGINS=
 
@@ -62,6 +70,7 @@ RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS lookat"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS mediainfo"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS ratio"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS retrackers"
+#RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS rpc"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS rss"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS rssurlrewrite"
 RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS rutracker_check"
@@ -78,29 +87,30 @@ RUTORRENT_PLUGINS="$RUTORRENT_PLUGINS unpack"
 
 
 # For building rtorrent
-LIBCURL_NAME="curl-8.20.0"
+LIBCURL_NAME="curl-8.15.0"
 LIBCURL_URL="http://curl.haxx.se/download/$LIBCURL_NAME.tar.gz"
-SIGCPP20_URL="https://github.com/libsigcplusplus/libsigcplusplus/archive/refs/tags/3.8.0.tar.gz"
-TINYXML2_VERSION="11.0.0"
-LIBTORRENT_VERSION="0.16.11"
-RTORRENT_VERSION="0.16.11"
-TINYXML2_NAME="tinyxml2-$TINYXML2_VERSION"
-TINYXML2_URL="https://github.com/leethomason/tinyxml2/archive/refs/tags/$TINYXML2_VERSION.tar.gz"
+SIGCPP20_URL="https://github.com/libsigcplusplus/libsigcplusplus/archive/refs/tags/3.6.0.tar.gz"
+XMLRPC_SVN_DIR="https://svn.code.sf.net/p/xmlrpc-c/code/stable"
+LIBTORRENT_VERSION="0.13.8"
+RTORRENT_VERSION="0.9.8"
 LIBTORRENT_NAME="libtorrent-$LIBTORRENT_VERSION"
 LIBTORRENT_URL="https://github.com/rakshasa/rtorrent/releases/download/v$RTORRENT_VERSION/$LIBTORRENT_NAME.tar.gz"
 RTORRENT_NAME="rtorrent-$RTORRENT_VERSION"
 RTORRENT_URL="https://github.com/rakshasa/rtorrent/releases/download/v$RTORRENT_VERSION/$RTORRENT_NAME.tar.gz"
 
-HTPASSWD_PY_SCRIPT_URL="http://sourceforge.net/projects/autodl-irssi/files/inst-files/htpasswd.py/download"
-HTPASSWD_PY_SCRIPT_URL2="http://trac.edgewall.org/export/10433/trunk/contrib/htpasswd.py"
+HTPASSWD_PY_SCRIPT_URL="http://trac.edgewall.org/export/10433/trunk/contrib/htpasswd.py"
+HTPASSWD_PY_SCRIPT_URL2="http://sourceforge.net/projects/autodl-irssi/files/inst-files/htpasswd.py/download"
 
-NGINX_NAME="nginx-1.30.0"
+NGINX_NAME="nginx-1.29.1"
 NGINX_URL="http://nginx.org/download/$NGINX_NAME.tar.gz"
+
+LIGHTTPD_NAME="lighttpd-1.4.81"
+LIGHTTPD_URL="http://download.lighttpd.net/lighttpd/releases-1.4.x/$LIGHTTPD_NAME.tar.gz"
 
 MOD_SCGI_VERSION="2.2"
 MOD_SCGI_URL="http://python.ca/scgi/releases/scgi-$MOD_SCGI_VERSION.tar.gz"
 
-UNRAR_VERSION="7.2.4"
+UNRAR_VERSION="7.1.10"
 UNRAR_URL="https://ftp.osuosl.org/pub/blfs/conglomeration/unrarsrc/unrarsrc-$UNRAR_VERSION.tar.gz"
 
 # Dirs relative to user's home directory
@@ -108,7 +118,12 @@ RTORRENT_REL_DOWNLOAD_DIR="downloads"
 RTORRENT_REL_WATCH_DIR="rtorrent/watch"
 RTORRENT_REL_SESSION_DIR="rtorrent/session"
 
+REQUIRED_PERL_MODULES="Time::HiRes XML::LibXML Archive::Zip Net::SSLeay HTML::Parser Digest::SHA JSON"
 REQUIRED_PHP_MODULES="json xml sockets"
+
+# If set to y, add 'load perl' to .irssi/startup
+IRSSI_LOAD_PERL=n
+IGNORE_IRSSI=n
 
 # Start port. When we need a new port number, this port is incremented by one.
 CURRENT_PORT=23875
@@ -128,7 +143,9 @@ HTTPS_PORT=443
 SCGI_HOST="127.0.0.1"
 
 INTERACTIVE=n
+USE_RUTORRENT_PLUGIN=n
 REINSTALL_RUTORRENT_PLUGIN=n
+INSTALL_AUTODL_IRSSI=n
 RUTORRENT_PASSWORD_PROTECTED=n
 USERS=
 RUTORRENT_BASE_PATH=
@@ -143,8 +160,10 @@ INSTALL_WEBMIN=n
 USER_TIMEZONE=
 
 RUTORRENT_SITE_REALM="My ruTorrent web site"
+AUTODL_STARTUP_DESC="Start autodl-irssi and rtorrent"
 PHPCGI_STARTUP_DESC="Start php-cgi"
 NGINX_STARTUP_DESC="Start nginx"
+LIGHTTPD_STARTUP_DESC="Start lighttpd"
 
 PATH="$PATH:/usr/local/bin"
 
@@ -186,23 +205,29 @@ EOF
 exitHelp() {
 	cat << EOF
 
-ruTorrent plugin installer
+autodl-irssi and ruTorrent plugin installer
 
     sh $0 [options]
 
 Options:
 
 --rtorrent
-    Will build and install rtorrent, libtorrent and TinyXML-2 from source code.
+    Will build and install rtorrent, libtorrent and xmlrpc-c from source code.
 
 --rtorrent-noexec-patch
     Patch rtorrent to disallow remote users from executing code.
 
+--apache
+    Install Apache web server.
+
 --nginx
     Install nginx web server.
 
+--lighttpd
+    Install lighttpd web server.
+
 --rutorrent
-    Install ruTorrent. Requires a web server, eg. --nginx.
+    Install ruTorrent. Requires a web server, eg. --apache.
 
 --vsftpd
     Install vsftpd.
@@ -216,10 +241,25 @@ Options:
 --webmin
     Install Webmin.
 
--u user:webUser:webPass
---user user:webUser:webPass
-    The $(uname -s) user, ruTorrent user, ruTorrent password.
-    You can use more than one -u option.
+-p
+--rutorrent-plugin
+    Use or install the autodl-irssi ruTorrent plugin. If it's already installed,
+    it will be updated (svn up), unless --reinstall-plugin option is used in
+    which case it will be re-installed.
+
+-i
+--reinstall-plugin
+    Re-install the autodl-irssi ruTorrent plugin if it's already installed.
+
+-a
+--install-autodl
+    Install autodl-irssi.
+
+-u user:autodlPass:webUser:webPass
+--user user:autodlPass:webUser:webPass
+    The $(uname -s) user, autodl-irssi password, ruTorrent user, ruTorrent password.
+    You can use more than one -u option. If autodlPassword is not set, a random
+    password will be used.
 
 -w
 --password-protected
@@ -234,7 +274,7 @@ Options:
 
 -s
 --install-startup-script
-    Install a startup script (service) which will start rtorrent when
+    Install a startup script (service) which will start Irssi and rtorrent when
     the computer boots.
 
 -h
@@ -243,14 +283,27 @@ Options:
 
 Examples (as root user):
 
-  sh $0 --rtorrent --nginx --rutorrent --vsftpd --ftpes --webmin -s -u user1::user1:pass1 -u user2::user2:pass2
+  sh $0 --rtorrent --apache --rutorrent --vsftpd --ftpes --webmin -p -a -s -u user1::user1:pass1 -u user2::user2:pass2
 
-Installs rtorrent, nginx, ruTorrent, vsftpd (encrypted), Webmin, and installs a service (starting rtorrent)
- for both users.
+Installs rtorrent, Apache, ruTorrent, vsftpd (encrypted), Webmin the
+autodl-irssi plugin, autodl-irssi, installs a service (starting Irssi and
+rtorrent) for both users.
 
-  sh $0 --rtorrent -u user1 -u user2 -u user3 -u user4 -s
+  sh $0 -p -a -u user::user:pass -r /var/www/rutorrent -s
 
-Installs rtorrent  and the startup script.
+Installs autodl-irssi + ruTorrent plugin for user 'user'. ruTorrent has not been
+password protected. Also installs the startup script.
+
+  sh $0 -p -a -u user1::user1:pass1 -u user2::user2:pass2 -w -r /var/www/rutorrent -s
+
+Installs autodl-irssi + ruTorrent plugin for users 'user1' and 'user2'.
+ruTorrent has been password protected. Also installs the startup script.
+
+  sh $0 --rtorrent -a -u user1 -u user2 -u user3 -u user4 -s
+
+Installs rtorrent, autodl-irssi and the startup script.
+
+Help fchannel: #autodl-community@irc.p2p-network.net
 EOF
 	exit 1
 }
@@ -260,7 +313,13 @@ parseCommandLine() {
 		local arg="$1"
 		shift
 
-		if [ "$arg" = "-u" ] || [ "$arg" = "--user" ]; then
+		if [ "$arg" = "-p" ] || [ "$arg" = "--rutorrent-plugin" ]; then
+			USE_RUTORRENT_PLUGIN=y
+		elif [ "$arg" = "-i" ] || [ "$arg" = "--reinstall-plugin" ]; then
+			REINSTALL_RUTORRENT_PLUGIN=y
+		elif [ "$arg" = "-a" ] || [ "$arg" = "--install-autodl" ]; then
+			INSTALL_AUTODL_IRSSI=y
+		elif [ "$arg" = "-u" ] || [ "$arg" = "--user" ]; then
 			USERS="$USERS $1"
 			shift
 		elif [ "$arg" = "-w" ] || [ "$arg" = "--password-protected" ]; then
@@ -272,8 +331,12 @@ parseCommandLine() {
 			INSTALL_STARTUP_SCRIPT=y
 		elif [ "$arg" = "--rtorrent" ]; then
 			BUILD_RTORRENT=y
+		elif [ "$arg" = "--apache" ]; then
+			INSTALL_WEB_SERVER=apache
 		elif [ "$arg" = "--nginx" ]; then
 			INSTALL_WEB_SERVER=nginx
+		elif [ "$arg" = "--lighttpd" ]; then
+			INSTALL_WEB_SERVER=lighttpd
 		elif [ "$arg" = "--rutorrent" ]; then
 			INSTALL_RUTORRENT=y
 		elif [ "$arg" = "--vsftpd" ]; then
@@ -299,11 +362,26 @@ detectOs() {
 		. /etc/lsb-release
 	fi
 
+	if [ -f /etc/fedora-release ]; then
+		os=fedora
+		os_long="$(cat /etc/fedora-release)"
 	# Must be before a whole bunch of other OS tests
-	if [ "$DISTRIB_ID" = "Ubuntu" ]; then
+	elif [ "$DISTRIB_ID" = "Ubuntu" ]; then
+		os=debian
+		os_long="$DISTRIB_DESCRIPTION"
+	elif [ "$DISTRIB_ID" = "LinuxMint" ]; then
 		os=debian
 		os_long="$DISTRIB_DESCRIPTION"
 	# Must be before Debian
+	elif [ "$DISTRIB_ID" = "Peppermint" ]; then
+		os=debian
+		os_long="$DISTRIB_DESCRIPTION"
+	elif [ "$DISTRIB_ID" = "MEPIS" ]; then
+		os=debian
+		os_long="$DISTRIB_DESCRIPTION"
+	elif [ -f /etc/clearos-release ]; then
+		os=fedora
+		os_long="$(cat /etc/clearos-release)"
 	elif [ -f /etc/debian_version ]; then
 		os=debian
 		local prefix=
@@ -311,6 +389,9 @@ detectOs() {
 			prefix="GNU/"
 		fi
 		os_long="Debian $prefix$(uname -s) $(cat /etc/debian_version)"
+	elif [ -f /etc/redhat-release ]; then
+		os=fedora
+		os_long="$(cat /etc/redhat-release)"
 	else
          echo -e "\e[1;31mYour OS is not detected as an OS supported by this script. This script only supports \e[5;32mDebian and Fedora\e[0m \e[1;31mbased OSes.\e[0m"
          exit 1
@@ -582,7 +663,7 @@ buildProgram() {
 
 	echo "${CMSG}Building $prog...$CEND"
 
-	./configure --prefix=$PREFIX $2 || echo "Could not configure $prog. Continuing anyway." #errorExit "Could not configure $prog. Try again, or try logging out and in and try again."
+	./configure --prefix=$PREFIX $2 || errorExit "Could not configure $prog. Try again, or try logging out and in and try again."
 
 	getNumCpus
 	local make=${MAKE:-make}
@@ -625,7 +706,12 @@ downloadAndBuild() {
 	fi
 
 	cd $name
-	buildProgram "$prog" "$configOptions"
+	#if [ "$name" = "$LIBTORRENT_NAME" ]; then
+	#	sed -i "s/am__api_version='1.14'/am__api_version='1.15'/" configure
+	#elif [ "$name" = "$RTORRENT_NAME" ]; then
+	#	sed -i "s/am__api_version='1.14'/am__api_version='1.15'/" configure
+	#fi
+		buildProgram "$prog" "$configOptions"
 }
 
 checkoutAndBuild() {
@@ -675,9 +761,9 @@ buildRtorrent() {
 	if ! pkg-config --exists sigc++-2.0; then
 		downloadAndBuild "sigc++-2.0" "$SIGCPP20_URL" "$SIGCPP20_NAME" ""
 	fi
-	downloadAndBuild "tinyxml2" "$TINYXML2_URL" "$TINYXML2_NAME"
+	checkoutAndBuild "xmlrpc-c" "$XMLRPC_SVN_DIR" "--disable-cplusplus"
 	downloadAndBuild "libtorrent" "$LIBTORRENT_URL" "$LIBTORRENT_NAME" "" patchLibtorrent
-	downloadAndBuild "rtorrent" "$RTORRENT_URL" "$RTORRENT_NAME" "--with-xmlrpc-tinyxml2" ""
+	downloadAndBuild "rtorrent" "$RTORRENT_URL" "$RTORRENT_NAME" "--with-xmlrpc-c" ""
 }
 
 patchLibtorrent() {
@@ -705,6 +791,12 @@ installRtorrent() {
 	buildRtorrent
 	buildEnd
 }
+
+#installUnrar() {
+#	isProgramInstalled unrar && return
+#	installBuildTools
+#	buildMakeProgram "$UNRAR_URL" "unrar" "" "unrar" "makefile.unix"
+#}
 
 installModScgi() {
 	local modScgiFile="$1"
@@ -778,6 +870,10 @@ initUsers() {
 	for packedUser in $USERS; do
 		extractPackedUser $packedUser
 
+		if [ -z "$autodlPort" ]; then
+			getNewPortNumber
+			autodlPort=$newPortNumber
+		fi
 		if [ -z "$scgiPort" ]; then
 			getNewPortNumber
 			scgiPort=$newPortNumber
@@ -786,8 +882,14 @@ initUsers() {
 			getNewPortNumber
 			rtorrentPort=$newPortNumber
 		fi
+		if canGeneratePasswords; then
+			if [ -z "$autodlPassword" ]; then
+				generatePassword
+				autodlPassword="$newPassword"
+			fi
+		fi
 
-		users="$users $osUser:$webUser:$webPass:$scgiPort:$rtorrentPort"
+		users="$users $osUser:$autodlPassword:$webUser:$webPass:$autodlPort:$scgiPort:$rtorrentPort"
 	done
 	USERS="$users"
 }
@@ -796,10 +898,12 @@ extractPackedUser() {
 	local packedUser="$1"
 
 	osUser="$(echo $packedUser | cut -d: -f1)"
-	webUser="$(echo $packedUser | cut -d: -f2)"
-	webPass="$(echo $packedUser | cut -d: -f3)"
-	scgiPort="$(echo $packedUser | cut -d: -f4)"
-	rtorrentPort="$(echo $packedUser | cut -d: -f5)"
+	autodlPassword="$(echo $packedUser | cut -d: -f2)"
+	webUser="$(echo $packedUser | cut -d: -f3)"
+	webPass="$(echo $packedUser | cut -d: -f4)"
+	autodlPort="$(echo $packedUser | cut -d: -f5)"
+	scgiPort="$(echo $packedUser | cut -d: -f6)"
+	rtorrentPort="$(echo $packedUser | cut -d: -f7)"
 }
 
 getUserGroup() {
@@ -845,6 +949,14 @@ installMissingPhpPackages() {
 	installPackages
 }
 
+#installMissingPhp5Packages() {
+#	PACKAGES=
+#	for module in $MISSING_PHP_MODULES; do
+#		PACKAGES="$PACKAGES php5-$module"
+#	done
+#	installPackages
+#}
+
 enablePhpIniModules() {
 	local phpIni="$1"
 	shift
@@ -868,12 +980,11 @@ installMissingPhpModules() {
 $CWARNING
 The following PHP modules appear to be missing:
 	$MISSING_PHP_MODULES
-If the a ruTorrent plugin isn't working, you now know why. Install
+If the autodl-irssi ruTorrent plugin isn't working, you now know why. Install
 them using your package manager or enable them in your php.ini file, and
 restart your web server.$CEND
 EOF
 }
-
 
 addLogrotateConfig() {
 	local serviceName="$1"
@@ -1049,6 +1160,144 @@ createPhpcgiSocket() {
 	chmod 0770 "$PHPCGI_SOCKET_DIR"
 }
 
+verifyApacheServerVars() {
+	verifyWebServerVars
+	[ -z "$APACHE_SITE_FILE" ] && errorExit "You have not initialized APACHE_SITE_FILE"
+}
+
+apacheCreateApxs2Symlink() {
+	# The makefile uses apxs2, so make a symlink
+	if ! isProgramInstalled apxs2; then
+		local apxs=$(which apxs 2>/dev/null) && ln -s "$apxs" "${apxs}2"
+	fi
+}
+
+initializeApacheVars() {
+	local apacheUser="$1"
+	local apacheGroup="$2"
+	local apacheSitesDir="$3"
+
+	[ -n "$apacheUser" ] || errorExit "Invalid apache user: $apacheUser"
+	[ -n "$apacheGroup" ] || errorExit "Invalid apache group: $apacheGroup"
+	[ -d "$apacheSitesDir" ] || errorExit "Invalid apache sites dir: $apacheSitesDir"
+	[ -d "$APACHE_DIR" ] || errorExit "Invalid apache dir: $APACHE_DIR"
+
+	APACHE_SITE_NAME=${APACHE_SITE_NAME:-rutorrent.conf}
+	APACHE_SITE_FILE=$apacheSitesDir/$APACHE_SITE_NAME
+	initializeWwwRootVar
+	WWW_PASSWORD_FILE=$APACHE_DIR/rutorrent_passwd
+	WWW_PEMFILE=$APACHE_DIR/rutorrent.pem
+	WWW_USER="$apacheUser"
+	WWW_GROUP="$apacheGroup"
+	APACHE_RUN_USER=www-data
+	APACHE_RUN_GROUP=www-data
+	APACHE_PID_FILE=/var/run/apache2/apache2.pid
+	APACHE_RUN_DIR=/var/run/apache2
+	APACHE_LOCK_DIR=/var/lock/apache2
+	APACHE_LOG_DIR=/var/log/apache2
+}
+
+apacheGetRpcLocationDirectives() {
+	if [ "$INSTALL_RUTORRENT" = y ]; then
+		local i=1
+		for packedUser in $USERS; do
+			extractPackedUser $packedUser
+			local rpcMount="$(getUserRpcMount $i)"
+			cat << EOF
+	<Location "$rpcMount">
+		AuthType Basic
+		AuthName "$RUTORRENT_SITE_REALM"
+		AuthUserFile "$WWW_PASSWORD_FILE"
+		Require user $webUser
+	</Location>
+EOF
+			i=$(expr $i + 1)
+		done
+	fi
+}
+
+apacheGetVirtualHost() {
+	local port=$1
+	local ssl=$2
+	cat << EOF
+<VirtualHost *:$port>
+$(if [ "$ssl" = y ]; then
+	echo "	SSLEngine On"
+	echo "	SSLCertificateFile $WWW_PEMFILE"
+fi)
+	ServerAdmin admin@rutorrent
+	ServerName localhost
+	DocumentRoot $WWW_ROOT
+
+	<Directory />
+		AllowOverride None
+		Order deny,allow
+		Deny from all
+	</Directory>
+	<Location />
+		AuthType Basic
+		AuthName "$RUTORRENT_SITE_REALM"
+		AuthUserFile "$WWW_PASSWORD_FILE"
+		Require valid-user
+		Order allow,deny
+		Allow from all
+	</Location>
+	<Location ~ "^/rutorrent/(conf|share)">
+		Order deny,allow
+		Deny from all
+	</Location>
+	<Location ~ "/\\\\.svn">
+		Order deny,allow
+		Deny from all
+	</Location>
+$(apacheGetRpcLocationDirectives)
+</VirtualHost>
+EOF
+}
+
+apacheWriteSiteFile() {
+	verifyApacheServerVars
+	cat > "$APACHE_SITE_FILE" << EOF
+ServerName localhost
+
+$(apacheGetVirtualHost $HTTP_PORT n)
+$(apacheGetVirtualHost $HTTPS_PORT y)
+EOF
+
+	if [ "$INSTALL_RUTORRENT" = y ]; then
+		local i=1
+		local lp=; isWebServerRpcModule || lp='#'
+		for packedUser in $USERS; do
+			extractPackedUser $packedUser
+			local rpcMount="$(getUserRpcMount $i)"
+			echo "${lp}SCGIMount $rpcMount $SCGI_HOST:$scgiPort" >> "$APACHE_SITE_FILE"
+
+			i=$(expr $i + 1)
+		done
+	fi
+}
+
+apacheCommonInitialization() {
+	local buildTools="$1"
+	local modulesDir="$2"
+
+	webServerCommonInitialization
+	apacheWriteSiteFile
+
+	if [ -n "$APACHE_SCGI_FILE" ] && [ ! -f "$APACHE_SCGI_FILE" ]; then
+		installBuildTools
+		PACKAGES="$buildTools"
+		installPackages
+		apacheCreateApxs2Symlink
+
+		# Compiling mod_scgi will fail unless we remove this warning-as-error flag
+		local configVarsFile="$APACHE_DIR/modules/build/config_vars.mk"
+		[ -f "$configVarsFile" ] && sed_i 's/-Werror=format-security//g' "$configVarsFile"
+
+		installModScgi "$APACHE_SCGI_FILE" "$modulesDir"
+	fi
+}
+
 nginxGetRpcMounts() {
 	if [ "$INSTALL_RUTORRENT" = y ]; then
 		local i=1
@@ -1216,6 +1465,234 @@ installNginx() {
 	resetWebServerPermissions
 	osHandler_$os installPhpCgiService
 	osHandler_$os installNginxService
+}
+
+lighttpdGetRpcRequire() {
+	if [ "$INSTALL_RUTORRENT" = y ]; then
+		local i=1
+		for packedUser in $USERS; do
+			extractPackedUser $packedUser
+			local rpcMount="$(getUserRpcMount $i)"
+
+			cat << EOF
+	"$rpcMount" => (
+		"method" => "basic",
+		"realm" => "$RUTORRENT_SITE_REALM",
+		"require" => "user=$webUser",
+	),
+EOF
+			i=$(expr $i + 1)
+		done
+	fi
+}
+
+lighttpdGetScgiServerTable() {
+	echo 'scgi.server = ('
+
+	if [ "$INSTALL_RUTORRENT" = y ]; then
+		local i=1
+		local lp=; isWebServerRpcModule || lp='#'
+		for packedUser in $USERS; do
+			extractPackedUser $packedUser
+			getUserScgiSocketPath "$osUser"
+			local rpcMount="$(getUserRpcMount $i)"
+
+			cat << EOF
+$lp	"$rpcMount" => (
+$lp		(
+$lp			"socket" => "$scgiSocketPath",
+$lp			"check-local" => "disable",
+$lp			"disable-time" => 0,
+$lp		),
+$lp	),
+EOF
+			i=$(expr $i + 1)
+		done
+	fi
+
+	echo ')'
+}
+
+lighttpdWriteConfFile() {
+	cat > $LIGHTTPD_CONF << EOF
+server.follow-symlink = "disable"
+server.max-connections = 512
+server.max-fds = 1024
+server.max-keep-alive-idle = 15
+dir-listing.activate = "disable"
+server.pid-file = "$LIGHTTPD_PID_FILE"
+server.errorlog = "$LIGHTTPD_ERROR_LOG"
+accesslog.filename = "$LIGHTTPD_ACCESS_LOG"
+
+$(if [ $(uname -s) = Linux ]; then
+	echo 'server.event-handler = "linux-sysepoll"'
+	echo 'server.network-backend = "linux-sendfile"'
+fi)
+
+server.username = "$WWW_USER"
+server.groupname = "$WWW_GROUP"
+
+server.modules = (
+#	"mod_rewrite",
+#	"mod_redirect",
+#	"mod_alias",
+	"mod_access",
+	"mod_auth",
+#	"mod_status",
+#	"mod_simple_vhost",
+#	"mod_evhost",
+#	"mod_userdir",
+#	"mod_secdownload",
+	"mod_fastcgi",
+#	"mod_proxy",
+#	"mod_cgi",
+	"mod_scgi",
+#	"mod_ssi",
+#	"mod_compress",
+#	"mod_usertrack",
+#	"mod_expire",
+#	"mod_rrdtool",
+	"mod_accesslog",
+)
+
+fastcgi.server = (
+	".php" => (
+		(
+			"socket" => "$PHPCGI_SOCKET_FILE",
+		),
+	),
+)
+
+index-file.names = ( "index.php", "index.html", "index.htm" )
+static-file.exclude-extensions = ( ".fcgi", ".php", ".rb", "~", ".inc" )
+
+mimetype.assign = (
+	".html"		=> "text/html",
+	".htm"		=> "text/html",
+	".txt"		=> "text/plain",
+	".csv"		=> "text/plain",
+	".ini"		=> "text/plain",
+	".jpg"		=> "image/jpeg",
+	".jpeg"		=> "image/jpeg",
+	".gif"		=> "image/gif",
+	".png"		=> "image/png",
+	".bmp"		=> "image/bmp",
+	".css"		=> "text/css",
+	".js"		=> "application/javascript",
+	".ico"		=> "image/x-icon",
+	".json"		=> "application/json",
+	".torrent"	=> "application/x-bittorrent",
+	".pdf"		=> "application/pdf",
+	".bz2"		=> "application/x-bzip2",
+	".gz"		=> "application/x-gzip",
+	".tar.gz"	=> "application/x-tgz",
+	".tar"		=> "application/x-tar",
+	".tar.bz2"	=> "application/x-bzip-compressed-tar",
+	".tbz"		=> "application/x-bzip-compressed-tar",
+	".tgz"		=> "application/x-tgz",
+	".zip"		=> "application/zip",
+	".mp3"		=> "audio/mpeg",
+	".flac"		=> "audio/x-flac",
+	".m3u"		=> "audio/x-mpegurl",
+	".wma"		=> "audio/x-ms-wma",
+	".wax"		=> "audio/x-ms-wax",
+	".ogg"		=> "audio/ogg",
+	".wav"		=> "audio/x-wav",
+	".dtd"		=> "text/xml",
+	".xml"		=> "text/xml",
+	".mpeg"		=> "video/mpeg",
+	".mpg"		=> "video/mpeg",
+	".mp4"		=> "video/mp4",
+	".wmv"		=> "video/x-ms-wmv",
+	".avi"		=> "video/x-msvideo",
+)
+
+server.document-root = "$WWW_ROOT"
+server.port = $HTTP_PORT
+
+\$SERVER["socket"] == ":$HTTPS_PORT" {
+	ssl.engine = "enable"
+	ssl.pemfile = "$WWW_PEMFILE"
+}
+
+url.access-deny = (".htaccess")
+\$HTTP["url"] =~ "^/rutorrent/(?:share|conf)" {
+	url.access-deny = ("")
+}
+\$HTTP["url"] =~ "/\\.svn" {
+	url.access-deny = ("")
+}
+
+auth.backend = "htpasswd"
+auth.backend.htpasswd.userfile = "$WWW_PASSWORD_FILE"
+auth.require = (
+$(lighttpdGetRpcRequire)
+	"/" => (
+		"method" => "basic",
+		"realm" => "$RUTORRENT_SITE_REALM",
+		"require" => "valid-user",
+	),
+)
+
+$(lighttpdGetScgiServerTable)
+EOF
+	[ $? -eq 0 ] || errorExit "Could not write to file $LIGHTTPD_CONF"
+}
+
+buildLighttpd() {
+	buildStart
+	PREFIX=$LIGHTTPD_DIR
+	LIGHTTPD_BIN=$PREFIX/sbin/lighttpd
+	LIGHTTPD_CONF=$PREFIX/lighttpd.conf
+
+	# The log dir will be set to owner lighttpd since it's started as non-root.
+	# Put the pid file there so it can write to it.
+	LIGHTTPD_LOG_DIR=$PREFIX/logs
+	LIGHTTPD_PID_FILE=$LIGHTTPD_LOG_DIR/lighttpd.pid
+	LIGHTTPD_ERROR_LOG=$LIGHTTPD_LOG_DIR/error.log
+	LIGHTTPD_ACCESS_LOG=$LIGHTTPD_LOG_DIR/access.log
+
+	local configureFlags="\
+				--prefix=$PREFIX \
+				--with-openssl \
+				--with-pcre \
+				--with-zlib \
+				--without-bzip2"
+	downloadAndBuild "lighttpd" "$LIGHTTPD_URL" "$LIGHTTPD_NAME" "$configureFlags"
+	buildEnd
+}
+
+installLighttpd() {
+	SCGI_USE_UNIX_DOMAIN_SOCKET=y
+	installBuildTools
+	osHandler_$os preLighttpdInstall
+	#installUnrar
+
+	LIGHTTPD_DIR=/usr/local/lighttpd
+	initializeWwwRootVar
+	WWW_PASSWORD_FILE=$LIGHTTPD_DIR/rutorrent_passwd
+	WWW_PEMFILE=$LIGHTTPD_DIR/rutorrent.pem
+	WWW_USER=${WWW_USER:-lighttpd}
+	WWW_GROUP=${WWW_GROUP:-lighttpd}
+
+	detectPhpCgi
+	createWebServerUserGroup
+	createPhpcgiSocket
+
+	buildLighttpd
+	webServerCommonInitialization
+	lighttpdWriteConfFile
+
+	addLogrotateConfig lighttpd \
+			"$LIGHTTPD_ACCESS_LOG $LIGHTTPD_ERROR_LOG" \
+			"[ -f \"$LIGHTTPD_PID_FILE\" ] && kill -HUP \$(cat \"$LIGHTTPD_PID_FILE\") >/dev/null 2>&1; true"
+
+	mkdir -p "$LIGHTTPD_LOG_DIR"
+	chown -R $WWW_USER:$WWW_GROUP "$LIGHTTPD_LOG_DIR"
+
+	resetWebServerPermissions
+	osHandler_$os installPhpCgiService
+	osHandler_$os installLighttpdService
 }
 
 # Add $name=$value to the file, or modify an existing line if present in the file
@@ -1390,13 +1867,13 @@ exit \$RETVAL
 EOF
 }
 
-getCommonStartupScriptContents_rtorrent() {
+getCommonStartupScriptContents_autodl() {
 	local USER="$1"
 	local STARTUPNAME="$2"
 	cat << EOF
 NAME=$STARTUPNAME
 USER=$USER
-SESSIONNAME=rtorrent
+SESSIONNAME=autodl
 
 resetPath() {
 	PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:\$PATH"
@@ -1420,14 +1897,23 @@ isStarted() {
 startIt() {
 	isStarted && return 0
 
+	local START_IRSSI=n
 	local START_RTORRENT=n
+	which irssi > /dev/null 2>&1 && START_IRSSI=y
 	which rtorrent > /dev/null 2>&1 && START_RTORRENT=y
 
-	case \$START_RTORRENT in
-		y)
+	case \$START_IRSSI\$START_RTORRENT in
+		yy)
+			runUserCmd "screen -S \$SESSIONNAME -d -t rtorrent -m rtorrent"
+			runUserCmd "screen -d -r \$SESSIONNAME -X screen -t irssi irssi"
+			;;
+		yn)
+			runUserCmd "screen -S \$SESSIONNAME -d -t irssi -m irssi"
+			;;
+		ny)
 			runUserCmd "screen -S \$SESSIONNAME -d -t rtorrent -m rtorrent"
 			;;
-		n)
+		nn)
 			;;
 	esac
 	return 0
@@ -1473,36 +1959,39 @@ v_showStatus() {
 EOF
 }
 
-getChkconfigScriptContents_rtorrent() {
-	getChkconfigScriptContents "$RTORRENT_STARTUP_DESC"
+getChkconfigScriptContents_autodl() {
+	getChkconfigScriptContents "$AUTODL_STARTUP_DESC"
 }
 
-getLsbStartupHeader_rtorrent() {
+# LSB style script, also supports chkconfig
+# $1 = user name
+# $2 = service name
+getLsbStartupHeader_autodl() {
 	local USER="$1"
 	local STARTUPNAME="$2"
 	cat << EOF
-$(getChkconfigScriptContents_rtorrent)
-$(getLsbStartupScriptContents "$STARTUPNAME" "$RTORRENT_STARTUP_DESC")
+$(getChkconfigScriptContents_autodl)
+$(getLsbStartupScriptContents "$STARTUPNAME" "$AUTODL_STARTUP_DESC")
 
-$(getCommonStartupScriptContents_rtorrent "$USER" "$STARTUPNAME")
+$(getCommonStartupScriptContents_autodl "$USER" "$STARTUPNAME")
 EOF
 }
 
-installService_bsd_rtorrent() {
+installService_bsd_autodl() {
 	local user="$1"
 	local scriptName="$2"
 	local file="$3"
 
 	cat > "$file" << EOF
 #!/bin/sh
-# PROVIDE: rtorrent_$user
+# PROVIDE: autodl_$user
 # REQUIRE: FILESYSTEMS NETWORKING
 # KEYWORD: shutdown
 
 . /etc/rc.subr
 
 name=$scriptName
-desc="RTORRENT_STARTUP_DESC"
+desc="$AUTODL_STARTUP_DESC"
 start_cmd=v_startIt
 stop_cmd=v_stopIt
 restart_cmd=v_restartIt
@@ -1520,7 +2009,7 @@ v_stopIt() {
 	stopIt && echo "done." || echo "ERROR."
 }
 
-$(getCommonStartupScriptContents_rtorrent "$user" "$scriptName")
+$(getCommonStartupScriptContents_autodl "$user" "$scriptName")
 
 load_rc_config \$name
 run_rc_command "\$1"
@@ -1528,7 +2017,6 @@ EOF
 	[ $? -eq 0 ] || errorExit "Could not write to file $file. Run this script as root."
 	chmod +x "$file"
 }
-
 
 getCommonStartupScriptContents_simpleService() {
 	local USER="$1"
@@ -1649,6 +2137,17 @@ getLsbStartupHeader_nginx() {
 	getCommonStartupScriptContents_nginx "$NGINX_BIN"
 }
 
+getCommonStartupScriptContents_lighttpd() {
+	getCommonStartupScriptContents_simpleService "root" "$1" "\$BINPATH -f $LIGHTTPD_CONF 2>/dev/null" "$LIGHTTPD_PID_FILE"
+}
+
+getLsbStartupHeader_lighttpd() {
+	getChkconfigScriptContents "$LIGHTTPD_STARTUP_DESC"
+	getLsbStartupScriptContents lighttpd "$LIGHTTPD_STARTUP_DESC"
+
+	getCommonStartupScriptContents_lighttpd "$LIGHTTPD_BIN"
+}
+
 addLsbHeaderToStartupScript() {
 	local scriptPath="$1"
 	local provides="${2:-$scriptPath}"
@@ -1701,8 +2200,8 @@ osHandler_debian() {
 	case $1 in
 		init)
 			INSTALL="apt-get -y install"
-			FEATURES="service rtorrent nginx vsftpd webmin"
-			BUILD_TOOLS="build-essential make file pkg-config libtool m4 zlib1g-dev automake"
+			FEATURES="service rtorrent apache nginx lighttpd vsftpd webmin"
+			BUILD_TOOLS="build-essential make file pkg-config libtool m4 zlib1g-dev automake unrar"
 			;;
 		init2)
 
@@ -1716,24 +2215,29 @@ osHandler_debian() {
 			;;
 		installTools)
 			PACKAGES=
+			addProgram irssi
 			addProgram mediainfo
 			addProgram git-core
 			addProgram svn subversion
 			addProgram wget
 			addProgram unzip
 			addProgram screen
+			installPackages
+			# Make sure subversion won't complain about invalid certs
+			$INSTALL ca-certificates
+			;;
+		installAutodlTools)
+			PACKAGES=
 			addProgram perl
 			addPerlModule Archive::Zip libarchive-zip-perl
 			addPerlModule HTML::Parser libhtml-parser-perl
 			addPerlModule Digest::SHA libdigest-sha-perl
 			installPackages
-			
+
 			installPerlModule Net::SSLeay libnet-ssleay-perl
 			installPerlModule XML::LibXML libxml-libxml-perl
 			installPerlModule JSON::XS libjson-xs-perl
 			installPerlModule JSON libjson-perl
-			# Make sure subversion won't complain about invalid certs
-			$INSTALL ca-certificates
 			;;
 		installCpanTools)
 			# Need to remove the old JSON or cpan may fail to build the modules
@@ -1793,12 +2297,13 @@ EOF
 			update-rc.d $serviceName defaults || errorExit "Could not install service $serviceFile. Run this script as root."
 			invoke-rc.d $serviceName restart
 			;;
-		installRtorrentService)
+		installAutodlService)
 			local user=$2
-			osHandler_$os _installService rtorrent_$user "getLsbStartupHeader_rtorrent \"$user\" \"\$serviceName\""
+			osHandler_$os _installService autodl_$user "getLsbStartupHeader_autodl \"$user\" \"\$serviceName\""
 			;;
 		_installCommonWebServerStuff)
 			# Also add some extra tools for ruTorrent and some of its plugins
+			#PACKAGES="php7.0-cli gzip curl openssl logrotate"
 			if [ -f /etc/os-release ]; then
 				. /etc/os-release
 				OS_RELEASE_NAME=$ID
@@ -1813,6 +2318,17 @@ EOF
 						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.4-cgi ffmpeg"
 						elif [ "$UBUNTU_RELEASE" -gt "2004" ]; then
 						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php-cgi ffmpeg php-cgi libpcre3-dev libbz2-dev python-is-python3 unrar"
+						#echo "deb http://de.archive.ubuntu.com/ubuntu bionic main universe" | sudo tee -a /etc/apt/sources.list
+						fi
+					elif [ "$OS_RELEASE_NAME" = "debian" ];then
+					DEBIAN_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/\..*$//')
+						if [ "$DEBIAN_RELEASE" -le "8" ]; then
+						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php5-cgi"
+						echo "OS is Debian 8 or earlier"
+						elif [ "$DEBIAN_RELEASE" -eq "9" ]; then
+						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.0-cgi ffmpeg"
+						elif [ "$DEBIAN_RELEASE" -ge "10" ]; then
+						PACKAGES="gzip curl openssl logrotate libpcre3-dev libssl-dev zlib1g-dev php7.3-cgi ffmpeg"
 						fi
 					fi
 				fi
@@ -1820,6 +2336,52 @@ EOF
 			# Ubuntu 8 doesn't have php5-geoip
 			PACKAGES="php-geoip"
 			installPackages
+			#PACKAGES="unrar"
+			#installPackages
+			;;
+		installApache)
+			osHandler_$os _installCommonWebServerStuff
+			PACKAGES="libapache2-mpm-itk libapache2-mod-php php apache2"
+			installPackages
+			PACKAGES="libapache2-mod-scgi"; installPackages
+
+			if [ "$OS_RELEASE_NAME" = "ubuntu" ];then
+				UBUNTU_RELEASE=$(lsb_release -r | awk '{ print $2 }' | sed 's/[.]//')
+					if [ "$UBUNTU_RELEASE" -le "1804" ]; then
+					WWW_PHP_INI=/etc/php/7.0/apache2/php.ini
+					elif [ "$UBUNTU_RELEASE" -gt "1804" ]; then
+					WWW_PHP_INI=/etc/php/7.4/apache2/php.ini
+					fi
+				fi
+			#WWW_PHP_INI=/etc/php/7.0/apache2/php.ini
+			APACHE_DIR=/etc/apache2
+			APACHE_SITE_NAME=rutorrent.conf
+			APACHE_SCGI_FILE=$APACHE_DIR/mods-available/scgi.load
+			initializeApacheVars www-data www-data "$APACHE_DIR/sites-available"
+			apacheCommonInitialization "apache2-prefork-dev" /usr/lib/apache2/modules
+
+			a2enmod ssl || errorExit "Could not enable mod_ssl"
+			a2enmod scgi || errorExit "Could not enable mod_scgi"
+			# Ubuntu Server 6 doesn't come with this module
+			a2enmod auth_basic
+			a2dissite default
+			a2dissite default-ssl
+			a2ensite $APACHE_SITE_NAME || errorExit "Could not enable site"
+			if ! grep -qE "^[ 	]*Listen.*[: 	]$HTTPS_PORT\\>" "$APACHE_DIR/ports.conf"; then
+				echo "Listen $HTTPS_PORT" >> "$APACHE_DIR/ports.conf"
+			fi
+			resetWebServerPermissions
+			#echo "Adding Apache Environment Variables"
+			#APACHE_RUN_USER=www-data
+			#APACHE_RUN_GROUP=www-data
+			#APACHE_PID_FILE=/var/run/apache2/apache2.pid
+			#APACHE_RUN_DIR=/var/run/apache2
+			#APACHE_LOCK_DIR=/var/lock/apache2
+			#APACHE_LOG_DIR=/var/log/apache2
+			invoke-rc.d apache2 restart || errorExit "Could not start $INSTALL_WEB_SERVER"
+			;;
+		restart_apache)
+			invoke-rc.d apache2 restart || errorExit "Could not start $INSTALL_WEB_SERVER"
 			;;
 		installVsftpd)
 			installProgram vsftpd
@@ -1829,6 +2391,7 @@ EOF
 		preNginxInstall)
 			WWW_PHP_INI=/etc/php/8.3/cgi/php.ini
 			osHandler_$os _installCommonWebServerStuff
+			#installPackages
 
 			# Make sure it builds on Debian GNU/kFreeBSD 6.0.
 			if [ "$(uname -s)" != Linux ]; then
@@ -1844,6 +2407,18 @@ EOF
 		restart_nginx)
 			invoke-rc.d phpcgi restart || errorExit "Could not start php-cgi"
 			invoke-rc.d nginx restart || errorExit "Could not start $INSTALL_WEB_SERVER"
+			;;
+		preLighttpdInstall)
+			WWW_PHP_INI=/etc/php5/cgi/php.ini
+			osHandler_$os _installCommonWebServerStuff
+			#installPackages
+			;;
+		installLighttpdService)
+			osHandler_$os _installService lighttpd getLsbStartupHeader_lighttpd
+			;;
+		restart_lighttpd)
+			invoke-rc.d phpcgi restart || errorExit "Could not start php-cgi"
+			invoke-rc.d lighttpd restart || errorExit "Could not start $INSTALL_WEB_SERVER"
 			;;
 		postWebminInstall)
 			addLsbHeaderToStartupScript /etc/init.d/webmin "webmin" "webmin"
@@ -1866,8 +2441,16 @@ canInstallRtorrent() {
 	return $(arrayIsPresent rtorrent $FEATURES)
 }
 
+canInstallApache() {
+	return $(arrayIsPresent apache $FEATURES)
+}
+
 canInstallNginx() {
 	return $(arrayIsPresent nginx $FEATURES)
+}
+
+canInstallLighttpd() {
+	return $(arrayIsPresent lighttpd $FEATURES)
 }
 
 canInstallVsftpd() {
@@ -1880,6 +2463,13 @@ canInstallWebmin() {
 
 getRequiredPrograms() {
 	REQUIRED_PROGRAMS="which svn wget unzip ed sed grep tar expr ps awk kill printf"
+
+	if [ "$INSTALL_AUTODL_IRSSI" = y ]; then
+		REQUIRED_PROGRAMS="$REQUIRED_PROGRAMS perl"
+
+		# NetBSD and DragonFly BSD don't compile Irssi with Perl support by default
+		[ "$IGNORE_IRSSI" != y ] && REQUIRED_PROGRAMS="$REQUIRED_PROGRAMS irssi"
+	fi
 }
 
 verifyInstalledPrograms() {
@@ -1892,6 +2482,10 @@ verifyInstalledPrograms() {
 		isProgramInstalled "$prog" || MISSING_PROGRAMS="$MISSING_PROGRAMS $name"
 	done
 	[ -n "$MISSING_PROGRAMS" ] && errorExit "Can't continue. The following programs are not installed: $MISSING_PROGRAMS"
+}
+
+initPluginDirVar() {
+	AUTODL_IRSSI_PLUGIN_DIR="$RUTORRENT_BASE_PATH/plugins/autodl-irssi"
 }
 
 getRtorrentDirs() {
@@ -1978,7 +2572,136 @@ askOsUser() {
 # Adds another user to USERS
 addUser() {
 	local osUser="$1"
-	USERS="$USERS $osUser"
+	local webUser="$2"
+	local autodlPassword=
+	local webpass=
+
+	if [ "$INSTALL_RUTORRENT" = y ] || [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+		if ! canGeneratePasswords; then
+			cat << EOF
+$CQUESTION
+The password makes sure only you can change your autodl-irssi settings. This is
+NOT your login password. Use any password, but each user should use a unique
+password. The password is used by the PHP code to access autodl-irssi settings.
+You don't need to remember this password.  It can't contain any spaces or a
+colon ':'.$CEND
+EOF
+			while true; do
+				askQuestion "Enter the autodl-irssi password (this is not your login password):" ""
+				autodlPassword="$answer"
+				isValidPassword "$autodlPassword" && break
+				echo "${CWARNING}Invalid password. Try again.$CEND"
+			done
+		fi
+
+		if [ "$RUTORRENT_PASSWORD_PROTECTED" = y ]; then
+			while true; do
+				askQuestion "Enter your ruTorrent password:" ""
+				webpass="$answer"
+				isValidPassword "$webpass" && break
+				echo "${CWARNING}Invalid password. Try again.$CEND"
+			done
+		fi
+
+		USERS="$USERS $osUser:$autodlPassword:$webUser:$webpass"
+	else
+		USERS="$USERS $osUser"
+	fi
+}
+
+installUser() {
+	local userPluginDir="$1"
+	local osUser="$2"
+	local webUser="${3:-$osUser}"
+	local port="$4"
+	local autodlPassword="$5"
+
+	getUserGroup "$osUser"
+	getUserDir "$osUser"
+
+	cat << EOF
+
+========================= ${CGREEN}Installing autodl-irssi$CEND =========================
+Use the ruTorrent plugin: $CGREEN$USE_RUTORRENT_PLUGIN$CEND
+OS user: $CGREEN$osUser$CEND
+EOF
+	if [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+		[ "$RUTORRENT_PASSWORD_PROTECTED" = y ] && echo "ruTorrent user: $CGREEN$webUser$CEND"
+		echo "port: $CGREEN$port$CEND"
+		echo "password: $CGREEN$autodlPassword$CEND"
+	fi
+	cat << EOF
+group: $CGREEN$group$CEND
+home: $CGREEN$userDir$CEND
+
+EOF
+	if [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+		isValidPortNumber "$port" || errorExit "Invalid port number: $port"
+		isValidPassword "$autodlPassword" || errorExit "Invalid password: $autodlPassword"
+		isValidWebUser "$webUser" || errorExit "Invalid web user: $webUser"
+	fi
+
+	mkdir -p "$userDir/.irssi/scripts/autorun"
+	cd "$userDir/.irssi/scripts" || errorExit "Could not CD into user dir. Run the script as root."
+	echo "${CMSG}Downloading autodl-irssi.zip...$CEND"
+	if ! downloadFile autodl-irssi.zip "$AUTODL_IRSSI_ZIP_URL"; then
+		errorExit "Could not download autodl-irssi zip file"
+	fi
+	echo "${CMSG}Unpacking autodl-irssi...$CEND"
+	unzip -o autodl-irssi.zip > /dev/null || errorExit "Could not unpack autodl-irssi zip file"
+	rm -f autodl-irssi.zip
+	cp autodl-irssi-master/autodl-irssi.pl autorun/ || errorExit "Could not copy autodl-irssi.pl to Irssi autorun dir."
+	mkdir -p "$userDir/.autodl"
+	touch "$userDir/.autodl/autodl.cfg"
+	if ! [ -s "$userDir/.autodl/autodl.cfg" ]; then
+		[ "$INSTALL_RUTORRENT" = y ] && cat > "$userDir/.autodl/autodl.cfg" << EOF
+[options]
+upload-type = rtorrent
+EOF
+	fi
+
+	if [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+		if [ ! -d "$AUTODL_IRSSI_PLUGIN_DIR" ]; then
+			errorExit "The autodl-irssi ruTorrent plugin has not been installed. Install it."
+		fi
+
+		cat > "$userDir/.autodl/autodl2.cfg" << EOF
+[options]
+gui-server-port = $port
+gui-server-password = $autodlPassword
+EOF
+
+		rm -f "$AUTODL_IRSSI_PLUGIN_DIR/conf.php"
+		mkdir -p "$userPluginDir"
+		cat > "$userPluginDir/conf.php" << EOF
+<?php
+\$autodlPort = $port;
+\$autodlPassword = "$autodlPassword";
+?>
+EOF
+		[ $? -eq 0 ] || errorExit "Could not write to $userPluginDir/conf.php. Run this script as root."
+		# Only set perms to 0400 if the code knows the owner (web server owner) and will reset it
+		[ "$ISROOT" = y ] && [ "$INSTALL_RUTORRENT" = y ] && chmod 0400 "$userPluginDir/conf.php"
+	else
+		# Don't use the autodl-irssi ruTorrent plugin
+		: > "$userDir/.autodl/autodl2.cfg"
+	fi
+
+	# The Perl module isn't loaded by default
+	if [ "$IRSSI_LOAD_PERL" = y ]; then
+		if [ ! -f "$userDir/.irssi/startup" ] || ! grep -q 'load perl' "$userDir/.irssi/startup"; then
+			echo "load perl" >> "$userDir/.irssi/startup"
+		fi
+	fi
+
+	# Make sure we redownload the tracker files since the ones in the zip file are possibly
+	# old versions.
+	local autodlStateFile="$userDir/.autodl/AutodlState.xml"
+	[ -f "$autodlStateFile" ] && sed_i 'g/<trackers-version>/d' "$autodlStateFile"
+
+	resetOwner "$osUser" "$userDir/.autodl" "$userDir/.irssi"
+	chmod 0700 "$userDir/.autodl" "$userDir/.irssi"
+	cp -r "$userDir/.irssi/scripts/autodl-irssi-master/AutodlIrssi/" "$userDir/.irssi/scripts/"
 }
 
 getRutorrentUserConfDir() {
@@ -2055,7 +2778,9 @@ Press ENTER to use the default answer in [brackets].$CEND
 EOF
 
 	webServers=
+	canInstallLighttpd	&& webServers="$webServers lighttpd"
 	canInstallNginx		&& webServers="$webServers nginx"
+	canInstallApache	&& webServers="$webServers apache"
 	if [ -n "$webServers" ]; then
 		cat << EOF
 $CQUESTION
@@ -2063,7 +2788,9 @@ If you want to install ruTorrent you must install a web server, eg. Apache.
 If you've already installed another web server, you must first uninstall it or
 disable it. List of supported web servers:$CEND
 EOF
+		canInstallLighttpd	&& echo "  ${CGREEN}lighttpd$CEND ${CQUESTION}lighttpd web server (lightweight)$CEND"
 		canInstallNginx		&& echo "  ${CGREEN}nginx$CEND    ${CQUESTION}nginx web server (lightweight)$CEND"
+		canInstallApache	&& echo "  ${CGREEN}apache$CEND   ${CQUESTION}Apache web server$CEND"
 							   echo "  ${CGREEN}none$CEND     ${CQUESTION}Don't install a web server$CEND"
 		while true; do
 			INSTALL_WEB_SERVER=
@@ -2084,14 +2811,37 @@ EOF
 	if canInstallRtorrent; then
 		cat << EOF
 $CQUESTION
-ruTorrent requires a working rtorrent built with TinyXML2 support.$CEND
+ruTorrent requires a working rtorrent built with XML-RPC support.$CEND
 EOF
 		askYesNo "Do you want to build rtorrent?" "Yes"
 		BUILD_RTORRENT="$answer"
 	fi
 
+	askYesNo "Do you want to install the autodl-irssi ruTorrent plugin?" "Yes"
+	USE_RUTORRENT_PLUGIN="$answer"
+
 	if [ "$INSTALL_RUTORRENT" = y ]; then
+		REINSTALL_RUTORRENT_PLUGIN=n
 		RUTORRENT_PASSWORD_PROTECTED=y
+	elif [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+		echo ""
+		while true; do
+			echo "${CQUESTION}The ruTorrent www base path is where you installed ruTorrent.$CEND"
+			askQuestion "What is the ruTorrent www base path, eg. /var/www/rutorrent:" ""
+			RUTORRENT_BASE_PATH="$answer"
+			isValidRutorrentBasePath "$RUTORRENT_BASE_PATH" && break
+
+			echo "$CWARNING$RUTORRENT_BASE_PATH is not the ruTorrent base path.$CEND"
+		done
+
+		initPluginDirVar
+		if [ -d "$AUTODL_IRSSI_PLUGIN_DIR" ]; then
+			echo ""
+			askYesNo "The autodl-irssi ruTorrent plugin seems to be installed. Do you want to re-install it?" "No"
+			REINSTALL_RUTORRENT_PLUGIN="$answer"
+		else
+			REINSTALL_RUTORRENT_PLUGIN=n
+		fi
 
 		cat << EOF
 $CQUESTION
@@ -2103,10 +2853,17 @@ EOF
 		RUTORRENT_PASSWORD_PROTECTED=n
 	fi
 
-	if canInstallService && ([ "$INSTALL_RUTORRENT" = y ]); then
+	if [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+		INSTALL_AUTODL_IRSSI=y
+	else
+		askYesNo "Do you want to install autodl-irssi?" "Yes"
+		INSTALL_AUTODL_IRSSI="$answer"
+	fi
+
+	if canInstallService && ([ "$INSTALL_AUTODL_IRSSI" = y ] || [ "$INSTALL_RUTORRENT" = y ]); then
 		cat << EOF
 $CQUESTION
-If you want to automatically start rtorrent when the computer boots,
+If you want to automatically start Irssi and rtorrent when the computer boots,
 install the startup script.$CEND
 EOF
 		askYesNo "Do you want to install the startup script?" "Yes"
@@ -2114,14 +2871,15 @@ EOF
 	fi
 
 	askUser=n
-	if [ "$INSTALL_STARTUP_SCRIPT" = y ] || [ "$INSTALL_RUTORRENT" = y ]; then
+	if [ "$USE_RUTORRENT_PLUGIN" = y ] || [ "$INSTALL_AUTODL_IRSSI" = y ] || \
+		[ "$INSTALL_STARTUP_SCRIPT" = y ] || [ "$INSTALL_RUTORRENT" = y ]; then
 		askUser=y
 	fi
 	if [ "$askUser" = y ]; then
 		if [ "$RUTORRENT_PASSWORD_PROTECTED" = n ]; then
 				cat << EOF
 $CQUESTION
-This is the user running rtorrent.$CEND
+This is the user running rtorrent and/or Irssi.$CEND
 ${CWARNING}Don't use the root user. Use a normal user!$CEND
 EOF
 				askOsUser
@@ -2131,7 +2889,7 @@ EOF
 				cat << EOF
 $CQUESTION
 ===================== USER =====================
-This is the user running rtorrent.
+This is the user running rtorrent and/or Irssi.
 ${CWARNING}Don't use the root user. Use a normal user!$CEND
 ${CCYAN}Press ENTER to stop adding users.$CEND
 EOF
@@ -2185,14 +2943,21 @@ EOF
 fi
 
 cmdline="sh $0"
+[ "$USE_RUTORRENT_PLUGIN" = y ] && cmdline="$cmdline -p"
+[ "$REINSTALL_RUTORRENT_PLUGIN" = y ] && cmdline="$cmdline -i"
+[ "$INSTALL_AUTODL_IRSSI" = y ] && cmdline="$cmdline -a"
 for user in $USERS; do cmdline="$cmdline -u $user"; done
 [ "$RUTORRENT_PASSWORD_PROTECTED" = y ] && cmdline="$cmdline -w"
 [ -n "$RUTORRENT_BASE_PATH" ] && cmdline="$cmdline -r '$RUTORRENT_BASE_PATH'"
 [ "$INSTALL_STARTUP_SCRIPT" = y ] && cmdline="$cmdline -s"
 if [ -z "$INSTALL_WEB_SERVER" ]; then
 	:
+elif [ "$INSTALL_WEB_SERVER" = apache ]; then
+	cmdline="$cmdline --apache"
 elif [ "$INSTALL_WEB_SERVER" = nginx ]; then
 	cmdline="$cmdline --nginx"
+elif [ "$INSTALL_WEB_SERVER" = lighttpd ]; then
+	cmdline="$cmdline --lighttpd"
 else
 	errorExit "Invalid web server: $INSTALL_WEB_SERVER"
 fi
@@ -2208,6 +2973,9 @@ cat << EOF
 You can execute this command as the root user (Ubuntu: use ${CRED}sudo$CEND):
   $CGREEN$cmdline$CEND
 
+Use the autodl-irssi ruTorrent plugin: $USE_RUTORRENT_PLUGIN
+Re-install the autodl-irssi ruTorrent plugin: $REINSTALL_RUTORRENT_PLUGIN
+Install autodl-irssi: $INSTALL_AUTODL_IRSSI
 Users: $USERS
 ruTorrent is password protected: $RUTORRENT_PASSWORD_PROTECTED
 ruTorrent base path: $RUTORRENT_BASE_PATH
@@ -2239,9 +3007,10 @@ fi
 
 osHandler_$os init2
 initUsers
+initPluginDirVar
 
 [ -n "$INSTALL_WEB_SERVER" ] || [ "$INSTALL_RUTORRENT" = y ] && RUTORRENT_PASSWORD_PROTECTED=y
-[ "$INSTALL_RUTORRENT" = y ] && [ -z "$INSTALL_WEB_SERVER" ] && errorExit "You must install a web server if you want to install ruTorrent, eg. use --nginx --rutorrent"
+[ "$INSTALL_RUTORRENT" = y ] && [ -z "$INSTALL_WEB_SERVER" ] && errorExit "You must install a web server if you want to install ruTorrent, eg. use --apache --rutorrent"
 [ "$INSTALL_RUTORRENT" = y ] && REINSTALL_RUTORRENT_PLUGIN=n
 
 [ "$BUILD_RTORRENT" = y ] && ! canInstallRtorrent && errorExit "Can't build rtorrent."
@@ -2251,18 +3020,39 @@ initUsers
 
 if [ -z "$INSTALL_WEB_SERVER" ]; then
 	:
+elif [ "$INSTALL_WEB_SERVER" = apache ]; then
+	canInstallApache || errorExit "Can't install Apache."
 elif [ "$INSTALL_WEB_SERVER" = nginx ]; then
 	canInstallNginx || errorExit "Can't install nginx."
+elif [ "$INSTALL_WEB_SERVER" = lighttpd ]; then
+	canInstallLighttpd || errorExit "Can't install lighttpd."
 else
 	errorExit "Invalid web server: $INSTALL_WEB_SERVER"
 fi
 
 [ -n "$FTP_PORT" ] && [ "$FTP_PORT" -lt 1 -o "$FTP_PORT" -gt 65535 ] && errorExit "Invalid FTP port: $FTP_PORT"
 
+if [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+	if [ -z "$INSTALL_WEB_SERVER" ] && ! isValidRutorrentBasePath "$RUTORRENT_BASE_PATH"; then
+		errorExit "$RUTORRENT_BASE_PATH is not a valid ruTorrent base path."
+	fi
+fi
+
+if [ "$INSTALL_AUTODL_IRSSI" = y ]; then
+	cat << EOF
+${CMSG}Installing required tools and Perl modules...
+Some Perl modules may not be present, but will be installed from CPAN.$CEND
+EOF
+else
+	echo "${CMSG}Installing required tools...$CEND"
+fi
 osHandler_$os installTools
 setSvnOpts
+[ "$INSTALL_AUTODL_IRSSI" = y ] && osHandler_$os installAutodlTools
 
 verifyInstalledPrograms
+
+[ "$INSTALL_AUTODL_IRSSI" = y ] && installMissingPerlModules
 
 cat << EOF
 $CMSG
@@ -2282,12 +3072,38 @@ fi
 
 if [ -z "$INSTALL_WEB_SERVER" ]; then
 	:
+elif [ "$INSTALL_WEB_SERVER" = apache ]; then
+	echo ""
+	echo "${CMSG}Installing Apache$CEND"
+	osHandler_$os installApache
+	#installUnrar
 elif [ "$INSTALL_WEB_SERVER" = nginx ]; then
 	echo ""
 	echo "${CMSG}Installing nginx$CEND"
 	installNginx
+elif [ "$INSTALL_WEB_SERVER" = lighttpd ]; then
+	echo ""
+	echo "${CMSG}Installing lighttpd$CEND"
+	installLighttpd
 else
 	errorExit "Invalid web server: $INSTALL_WEB_SERVER"
+fi
+
+if [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+	if isProgramInstalled php; then
+		installMissingPhpModules
+	else
+		cat << EOF
+$CWARNING
+Could not find the php executable. PHP is not installed or the PHP CLI version
+is not installed.  The autodl-irssi ruTorrent plugin requires the following PHP
+modules:
+	$CGREEN$REQUIRED_PHP_MODULES$CWARNING
+They're normally installed and enabled by default. If not you will need to
+install them (if needed) and then enable each one in php.ini, eg.
+extension=MODULE.so and then restart your web server.$CEND
+EOF
+	fi
 fi
 
 if [ "$INSTALL_RUTORRENT" = y ]; then
@@ -2308,10 +3124,23 @@ EOF
 	rm -rf "$RUTORRENT_DIRNAME"
 	tmpName=rutorrent-tmp
 	rm -rf $tmpName
-	git clone "$RUTORRENT_TRUNK_DIR" $tmpName/rutorrent >/dev/null
+	if ! git clone "$RUTORRENT_TRUNK_DIR" $tmpName/rutorrent >/dev/null; then
+	#if ! git clone --branch "v$RUTORRENT_VERSION" "$RUTORRENT_TRUNK_DIR" $tmpName/rutorrent >/dev/null; then
+		# Subversion failed. Try the official tar balls
+		mkdir -p $tmpName
+		cd $tmpName
+		downloadFile "$RUTORRENT_CORE_NAME" "$RUTORRENT_CORE_URL" || errorExit "Could not download ruTorrent."
+		#downloadFile "$RUTORRENT_PLUGINS_NAME" "$RUTORRENT_PLUGINS_URL" "$RUTORRENT_PLUGINS_URL2" || errorExit "Could not download ruTorrent plugins."
+		#for name in "$RUTORRENT_CORE_NAME" "$RUTORRENT_PLUGINS_NAME"; do
+		for name in "$RUTORRENT_CORE_NAME"; do
+			tar xzf "$name" || errorExit "Could not unpack $name"
+			rm -f "$name"
+		done
+		cd ..
+	fi
+	cd $tmpName
 	RUTORRENT_BASE_PATH="$WWW_ROOT/$RUTORRENT_DIRNAME"
 	initPluginDirVar
-	cd $tmpName
 	mv rutorrent/plugins/ .
 	mv rutorrent/ "$RUTORRENT_BASE_PATH"
 	mkdir -p "$RUTORRENT_BASE_PATH/plugins"
@@ -2405,7 +3234,7 @@ trackers.enable = 1
 #upload_rate = 0
 #trackers.use_udp = yes
 dht = auto
-#dht_port = 6881
+dht_port = 6881
 #protocol.pex.set = yes
 #hash_read_ahead = 10
 #hash_interval = 100
@@ -2443,6 +3272,42 @@ EOF
 	done
 
 	[ "$CREATE_ONE_PASSWORD_FILE_PER_USER" = y ] && createOnePasswordFilePerUser
+fi
+
+if [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+	[ -z "$RUTORRENT_BASE_PATH" ] && errorExit "Invalid ruTorrent base path."
+
+	[ "$REINSTALL_RUTORRENT_PLUGIN" = y ] && rm -rf "$AUTODL_IRSSI_PLUGIN_DIR"
+	mkdir -p "$RUTORRENT_BASE_PATH/plugins"
+	cd "$RUTORRENT_BASE_PATH/plugins"
+
+	if [ -d "$AUTODL_IRSSI_PLUGIN_DIR" ]; then
+		echo "${CMSG}The autodl-irssi ruTorrent plugin dir already exists. Updating it...$CEND"
+		cd "$AUTODL_IRSSI_PLUGIN_DIR"
+		if ! svn up $SVN_OPTS > /dev/null; then
+			errorExit "Could not update the autodl-irssi ruTorrent plugin. Run the script as root."
+		fi
+	else
+		echo "${CMSG}Downloading the autodl-irssi ruTorrent plugin...$CEND"
+		if ! git clone "$GIT_PATH_RUTORRENT_PLUGIN" autodl-irssi > /dev/null; then
+			errorExit "Could not check out the autodl-irssi ruTorrent plugin"
+		fi
+	fi
+fi
+
+if [ "$INSTALL_AUTODL_IRSSI" = y ]; then
+	if [ "$RUTORRENT_PASSWORD_PROTECTED" = y ]; then
+		for packedUser in $USERS; do
+			extractPackedUser $packedUser
+			installUser "$RUTORRENT_BASE_PATH/conf/users/$webUser/plugins/autodl-irssi" "$osUser" "$webUser" "$autodlPort" "$autodlPassword"
+		done
+	else
+		for packedUser in $USERS; do
+			extractPackedUser $packedUser
+			installUser "$AUTODL_IRSSI_PLUGIN_DIR" "$osUser" "$webUser" "$autodlPort" "$autodlPassword"
+			[ "$USE_RUTORRENT_PLUGIN" = y ] && break
+		done
+	fi
 fi
 
 if [ "$INSTALL_RUTORRENT" = y ]; then
@@ -2493,7 +3358,7 @@ if [ "$INSTALL_STARTUP_SCRIPT" = y ]; then
 	for packedUser in $USERS; do
 		extractPackedUser $packedUser
 		echo "${CMSG}Installing service for user $osUser.$CEND"
-		osHandler_$os installRtorrentService $osUser
+		osHandler_$os installAutodlService $osUser
 	done
 fi
 
@@ -2503,7 +3368,9 @@ echo "${CGREEN}================================= DONE ==========================
 [ -n "$INSTALL_WEB_SERVER" ] && echo "${CDGREEN}[+]$CEND ${CGREEN}Installed and configured web server ($INSTALL_WEB_SERVER)$CEND"
 [ "$INSTALL_VSFTPD" = y ] && echo "${CDGREEN}[+]$CEND ${CGREEN}Installed and configured FTP server (vsftpd)$CEND"
 [ "$INSTALL_RUTORRENT" = y ] && echo "${CDGREEN}[+]$CEND ${CGREEN}Installed ruTorrent$CEND"
-[ "$INSTALL_STARTUP_SCRIPT" = y ] && echo "${CDGREEN}[+]$CEND ${CGREEN}Installed and started rtorrent service$CEND"
+[ "$USE_RUTORRENT_PLUGIN" = y ] && echo "${CDGREEN}[+]$CEND ${CGREEN}Installed/updated the autodl-irssi ruTorrent plugin$CEND"
+[ "$INSTALL_AUTODL_IRSSI" = y ] && echo "${CDGREEN}[+]$CEND ${CGREEN}Installed autodl-irssi$CEND"
+[ "$INSTALL_STARTUP_SCRIPT" = y ] && echo "${CDGREEN}[+]$CEND ${CGREEN}Installed and started Irssi and rtorrent service$CEND"
 [ "$INSTALL_WEBMIN" = y ] && echo "${CDGREEN}[+]$CEND ${CGREEN}Installed Webmin$CEND"
 
 if [ "$INSTALL_RUTORRENT" = y ]; then
@@ -2588,7 +3455,7 @@ EOF
 fi
 
 if [ -n "$INSTALL_WEB_SERVER" ] || [ "$INSTALL_VSFTPD" = y ] || \
-	[ "$INSTALL_RUTORRENT" = y ] ; then
+	[ "$INSTALL_RUTORRENT" = y ] || [ "$USE_RUTORRENT_PLUGIN" = y ]; then
 	if [ "$SELINUX_ENABLED" = y ]; then
 		cat << EOF
 $CWARNING
@@ -2606,7 +3473,23 @@ likely warn you about a non-trusted certificate.$CEND
 EOF
 fi
 
-cat << EOF
-$CMSG
-The installation is completely done now. If you installed rTorrent (you did) then you$CEND ${CWARNING}MUST reboot now$CEND ${CMSG}for all the fixes to take effect.$CEND
+if [ "$USE_RUTORRENT_PLUGIN" = y ]; then
+	if isProgramInstalled php; then
+		detectMissingPhpModules
+		if [ -n "$MISSING_PHP_MODULES" ]; then
+			cat << EOF
+$CWARNING
+The following PHP modules seem to be missing. It's possible that the
+autodl-irssi ruTorrent plugin won't work. Missing PHP modules:
+	$MISSING_PHP_MODULES$CEND
 EOF
+		fi
+	else
+		cat << EOF
+$CWARNING
+Could not find the php executable. Make sure the following PHP modules are
+enabled or the autodl-irssi ruTorrent plugin won't work:
+	$REQUIRED_PHP_MODULES$CEND
+EOF
+	fi
+fi
